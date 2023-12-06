@@ -9,17 +9,27 @@ public class CharacterMovement : MonoBehaviour
     public float moveSpeed;
 
     public float groundDrag;
+    public float airDrag;
 
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
 
+    public float crouchSpeed;
+
+    public float slideMinSpeed;
+    public float slideMagnitude;
+    public float slideDrag;
+
     [HideInInspector] public float walkSpeed;
     [HideInInspector] public float sprintSpeed;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
+
+    [Header("Keybinds")]
+    public KeyCode crouchKey = KeyCode.LeftShift;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -35,31 +45,38 @@ public class CharacterMovement : MonoBehaviour
 
     Rigidbody rb;
 
+    MovementMode CurrentMovementMode;
+
+    enum MovementMode
+    {
+        Walking,
+        Falling,
+        Crouching,
+        Sliding
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
         readyToJump = true;
+
+        CurrentMovementMode = MovementMode.Walking;
     }
 
     private void Update()
     {
-        // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
-
-        MyInput();
-        SpeedControl();
-
-        // handle drag
-        if (grounded)
-            rb.drag = groundDrag;
-        else
-            rb.drag = 0;
     }
 
     private void FixedUpdate()
     {
+        // ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+
+        SpeedControl();
+        MyInput();
+
         MovePlayer();
     }
 
@@ -67,6 +84,26 @@ public class CharacterMovement : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
+
+        if (CurrentMovementMode == MovementMode.Falling)
+        {
+            if (grounded)
+            {
+                CurrentMovementMode = MovementMode.Walking;
+
+                return;
+            }
+        }
+
+        if (CurrentMovementMode != MovementMode.Falling)
+        {
+            if (!grounded)
+            {
+                CurrentMovementMode = MovementMode.Falling;
+
+                return;
+            }
+        }
 
         // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
@@ -76,6 +113,33 @@ public class CharacterMovement : MonoBehaviour
             Jump();
 
             Invoke(nameof(ResetJump), jumpCooldown);
+
+            return;
+        }
+
+        if (Input.GetKey(crouchKey) && grounded)
+        {
+            if (rb.velocity.magnitude > slideMinSpeed)
+            {
+                if (CurrentMovementMode != MovementMode.Sliding && CurrentMovementMode != MovementMode.Crouching)
+                {
+                    EnterSlide();
+
+                    CurrentMovementMode = MovementMode.Sliding;
+                }
+            }
+
+            else
+            {
+                CurrentMovementMode = MovementMode.Crouching;
+            }
+
+            return;
+        }
+
+        if (grounded)
+        {
+            CurrentMovementMode = MovementMode.Walking;
         }
     }
 
@@ -85,23 +149,62 @@ public class CharacterMovement : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // on ground
-        if (grounded)
+        if (CurrentMovementMode == MovementMode.Walking)
+        {
+            rb.drag = groundDrag;
+
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
-        // in air
-        else if (!grounded)
+            return;
+        }
+
+        if (CurrentMovementMode == MovementMode.Falling)
+        {
+            rb.drag = airDrag;
+
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+            return;
+        }
+
+        if (CurrentMovementMode == MovementMode.Sliding)
+        {
+            rb.drag = slideDrag;
+
+            return;
+        }
+
+        if(CurrentMovementMode == MovementMode.Crouching)
+        {
+            rb.drag = groundDrag;
+
+            rb.AddForce(moveDirection.normalized * crouchSpeed * 10f, ForceMode.Force);
+        }
     }
 
     private void SpeedControl()
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        // limit velocity if needed
-        if (flatVel.magnitude > moveSpeed)
+        if (CurrentMovementMode == MovementMode.Walking || CurrentMovementMode == MovementMode.Falling)
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            // limit velocity if needed
+            if (flatVel.magnitude > moveSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            }
+
+            return;
+        }
+
+        if(CurrentMovementMode == MovementMode.Crouching)
+        {
+            if(flatVel.magnitude > slideMinSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * (slideMinSpeed - 0.5f);
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            }
         }
     }
 
@@ -115,5 +218,10 @@ public class CharacterMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    private void EnterSlide()
+    {
+        rb.velocity = rb.velocity * slideMagnitude;
     }
 }

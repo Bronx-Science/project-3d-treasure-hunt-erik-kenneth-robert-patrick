@@ -481,12 +481,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   groundDrag: 5
+  airDrag: 0.5
   jumpForce: 7
   jumpCooldown: 1
   airMultiplier: 0.1
+  crouchSpeed: 1
+  slideMinSpeed: 5
+  slideMagnitude: 1.5
+  slideDrag: 0
   walkSpeed: 0
   sprintSpeed: 0
   jumpKey: 32
+  crouchKey: 304
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
