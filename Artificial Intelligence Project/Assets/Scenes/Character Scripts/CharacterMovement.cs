@@ -16,6 +16,7 @@ public class CharacterMovement : MonoBehaviour
     public float airMultiplier;
     bool readyToJump;
 
+    public float crouchHeight;
     public float crouchSpeed;
 
     public float slideMinSpeed;
@@ -45,6 +46,8 @@ public class CharacterMovement : MonoBehaviour
 
     Rigidbody rb;
 
+    CapsuleCollider Capsule;
+
     MovementMode CurrentMovementMode;
 
     enum MovementMode
@@ -59,6 +62,8 @@ public class CharacterMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        Capsule = GetComponent<CapsuleCollider>();
 
         readyToJump = true;
 
@@ -91,6 +96,8 @@ public class CharacterMovement : MonoBehaviour
             {
                 CurrentMovementMode = MovementMode.Walking;
 
+                NormalHeight();
+
                 return;
             }
         }
@@ -100,6 +107,8 @@ public class CharacterMovement : MonoBehaviour
             if (!grounded)
             {
                 CurrentMovementMode = MovementMode.Falling;
+
+                NormalHeight();
 
                 return;
             }
@@ -119,11 +128,13 @@ public class CharacterMovement : MonoBehaviour
 
         if (Input.GetKey(crouchKey) && grounded)
         {
-            if (rb.velocity.magnitude > slideMinSpeed)
+            if (rb.velocity.magnitude >= slideMinSpeed)
             {
                 if (CurrentMovementMode != MovementMode.Sliding && CurrentMovementMode != MovementMode.Crouching)
                 {
                     EnterSlide();
+
+                    CrouchHeight();
 
                     CurrentMovementMode = MovementMode.Sliding;
                 }
@@ -131,6 +142,8 @@ public class CharacterMovement : MonoBehaviour
 
             else
             {
+                CrouchHeight();                
+
                 CurrentMovementMode = MovementMode.Crouching;
             }
 
@@ -140,6 +153,8 @@ public class CharacterMovement : MonoBehaviour
         if (grounded)
         {
             CurrentMovementMode = MovementMode.Walking;
+
+            NormalHeight();
         }
     }
 
@@ -179,6 +194,8 @@ public class CharacterMovement : MonoBehaviour
             rb.drag = groundDrag;
 
             rb.AddForce(moveDirection.normalized * crouchSpeed * 10f, ForceMode.Force);
+
+            return;
         }
     }
 
@@ -205,6 +222,8 @@ public class CharacterMovement : MonoBehaviour
                 Vector3 limitedVel = flatVel.normalized * (slideMinSpeed - 0.5f);
                 rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
+
+            return;
         }
     }
 
@@ -223,5 +242,15 @@ public class CharacterMovement : MonoBehaviour
     private void EnterSlide()
     {
         rb.velocity = rb.velocity * slideMagnitude;
+    }
+
+    private void NormalHeight()
+    {
+        Capsule.height = playerHeight;
+    }
+
+    private void CrouchHeight()
+    {
+        Capsule.height = crouchHeight;
     }
 }

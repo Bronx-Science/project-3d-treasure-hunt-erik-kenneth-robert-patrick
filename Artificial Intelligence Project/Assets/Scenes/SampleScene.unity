@@ -485,6 +485,7 @@ MonoBehaviour:
   jumpForce: 7
   jumpCooldown: 1
   airMultiplier: 0.1
+  crouchHeight: 1
   crouchSpeed: 1
   slideMinSpeed: 5
   slideMagnitude: 1.5
