@@ -55,7 +55,8 @@ public class CharacterMovement : MonoBehaviour
         Walking,
         Falling,
         Crouching,
-        Sliding
+        Sliding,
+        WallRunning
     }
 
     private void Start()
@@ -94,9 +95,7 @@ public class CharacterMovement : MonoBehaviour
         {
             if (grounded)
             {
-                CurrentMovementMode = MovementMode.Walking;
-
-                NormalHeight();
+                EnterWalk();
 
                 return;
             }
@@ -106,9 +105,7 @@ public class CharacterMovement : MonoBehaviour
         {
             if (!grounded)
             {
-                CurrentMovementMode = MovementMode.Falling;
-
-                NormalHeight();
+                EnterFall();
 
                 return;
             }
@@ -133,18 +130,12 @@ public class CharacterMovement : MonoBehaviour
                 if (CurrentMovementMode != MovementMode.Sliding && CurrentMovementMode != MovementMode.Crouching)
                 {
                     EnterSlide();
-
-                    CrouchHeight();
-
-                    CurrentMovementMode = MovementMode.Sliding;
                 }
             }
 
             else
             {
-                CrouchHeight();                
-
-                CurrentMovementMode = MovementMode.Crouching;
+                EnterCrouch();
             }
 
             return;
@@ -152,9 +143,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (grounded)
         {
-            CurrentMovementMode = MovementMode.Walking;
-
-            NormalHeight();
+            EnterWalk();
         }
     }
 
@@ -163,39 +152,25 @@ public class CharacterMovement : MonoBehaviour
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        // on ground
-        if (CurrentMovementMode == MovementMode.Walking)
+        switch (CurrentMovementMode)
         {
-            rb.drag = groundDrag;
+            case MovementMode.Walking:
+                rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+                break;
 
-            return;
-        }
+            case MovementMode.Falling:
+                rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
-        if (CurrentMovementMode == MovementMode.Falling)
-        {
-            rb.drag = airDrag;
+                break;
 
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            case MovementMode.Crouching:
+                rb.AddForce(moveDirection.normalized * crouchSpeed * 10f, ForceMode.Force);
 
-            return;
-        }
+                break;
 
-        if (CurrentMovementMode == MovementMode.Sliding)
-        {
-            rb.drag = slideDrag;
-
-            return;
-        }
-
-        if(CurrentMovementMode == MovementMode.Crouching)
-        {
-            rb.drag = groundDrag;
-
-            rb.AddForce(moveDirection.normalized * crouchSpeed * 10f, ForceMode.Force);
-
-            return;
+            case MovementMode.Sliding:
+                return;
         }
     }
 
@@ -203,7 +178,7 @@ public class CharacterMovement : MonoBehaviour
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        if (CurrentMovementMode == MovementMode.Walking || CurrentMovementMode == MovementMode.Falling)
+        if (CurrentMovementMode == MovementMode.Walking)
         {
             // limit velocity if needed
             if (flatVel.magnitude > moveSpeed)
@@ -239,9 +214,42 @@ public class CharacterMovement : MonoBehaviour
         readyToJump = true;
     }
 
+    private void EnterWalk()
+    {
+        NormalHeight();
+
+        rb.drag = groundDrag;
+
+        CurrentMovementMode = MovementMode.Walking;
+    }
+
+    private void EnterFall()
+    {
+        NormalHeight();
+
+        rb.drag = airDrag;
+
+        CurrentMovementMode = MovementMode.Falling;
+    }
+
+    private void EnterCrouch()
+    {
+        CrouchHeight();
+
+        rb.drag = groundDrag;
+
+        CurrentMovementMode = MovementMode.Crouching;
+    }
+
     private void EnterSlide()
     {
+        CrouchHeight();
+
+        rb.drag = slideDrag;
+
         rb.velocity = rb.velocity * slideMagnitude;
+
+        CurrentMovementMode = MovementMode.Sliding;
     }
 
     private void NormalHeight()
