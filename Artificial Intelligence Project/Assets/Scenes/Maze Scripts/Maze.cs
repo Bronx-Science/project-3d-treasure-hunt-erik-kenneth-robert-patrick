@@ -8,11 +8,7 @@ public class Maze : MonoBehaviour
     public float WallWidth;
     public int MazeDimensions;
     public MazeUnit[,] mazeUnits;
-
-    public GameObject TopWall;
-    public GameObject BottomWall;
-    public GameObject LeftWall;
-    public GameObject RightWall;
+    public GameObject MazeStartPosition;
 
     // Start is called before the first frame update
     void Start()
@@ -29,42 +25,46 @@ public class Maze : MonoBehaviour
 
         GenerateMaze(0, 0, 0, 0, 0);
 
+        float XOffset = MazeStartPosition.transform.position.x;
+        float YOffset = MazeStartPosition.transform.position.y;
+        float ZOffset = MazeStartPosition.transform.position.z;
+
         for (int i = 0; i < MazeDimensions; i++)
         {
             for (int j = 0; j < MazeDimensions; j++)
             {
                 if (mazeUnits[i, j].TopWall)
                 {
-                    GameObject Wall = Instantiate(TopWall);
+                    GameObject Wall = Instantiate(MazeWall);
 
                     Wall.transform.parent = transform;
-                    Wall.transform.localPosition = new Vector3(i * WallWidth + WallWidth / 2, 0, j * WallWidth);
+                    Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth + WallWidth / 2), YOffset, ZOffset + (j * WallWidth));
                     Wall.transform.Rotate(0, 90, 0);
                 }
 
                 if (mazeUnits[i, j].BottomWall)
                 {
-                    GameObject Wall = Instantiate(BottomWall);
+                    GameObject Wall = Instantiate(MazeWall);
 
                     Wall.transform.parent = transform;
-                    Wall.transform.localPosition = new Vector3(i * WallWidth - WallWidth / 2, 0, j * WallWidth);
+                    Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth - WallWidth / 2), YOffset, ZOffset + (j * WallWidth));
                     Wall.transform.Rotate(0, 90, 0);
                 }
 
                 if (mazeUnits[i, j].RightWall)
                 {
-                    GameObject Wall = Instantiate(RightWall);
+                    GameObject Wall = Instantiate(MazeWall);
 
                     Wall.transform.parent = transform;
-                    Wall.transform.localPosition = new Vector3(i * WallWidth, 0, j * WallWidth + WallWidth / 2);
+                    Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth), YOffset, ZOffset + (j * WallWidth + WallWidth / 2));
                 }
 
                 if (mazeUnits[i, j].LeftWall)
                 {
-                    GameObject Wall = Instantiate(LeftWall);
+                    GameObject Wall = Instantiate(MazeWall);
 
                     Wall.transform.parent = transform;
-                    Wall.transform.localPosition = new Vector3(i * WallWidth, 0, j * WallWidth - WallWidth / 2);
+                    Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth), YOffset, ZOffset + (j * WallWidth - WallWidth / 2));
                 }
             }
         }

@@ -23,6 +23,8 @@ public class CharacterMovement : MonoBehaviour
     public float slideMagnitude;
     public float slideDrag;
 
+    public float wallrunDrag;
+
     [HideInInspector] public float walkSpeed;
     [HideInInspector] public float sprintSpeed;
 
@@ -78,10 +80,10 @@ public class CharacterMovement : MonoBehaviour
     private void FixedUpdate()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+        grounded = (Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround) && readyToJump);
 
-        SpeedControl();
         MyInput();
+        SpeedControl();
 
         MovePlayer();
     }
@@ -93,6 +95,18 @@ public class CharacterMovement : MonoBehaviour
 
         if (CurrentMovementMode == MovementMode.Falling)
         {
+            Vector3 VelocityDirection = new Vector3(rb.velocity.x, 0, rb.velocity.y);
+            VelocityDirection.Normalize();
+
+            bool WallIsNear = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+
+            if(WallIsNear)
+            {
+                EnterWallRun();
+
+                return;
+            }
+
             if (grounded)
             {
                 EnterWalk();
@@ -101,7 +115,7 @@ public class CharacterMovement : MonoBehaviour
             }
         }
 
-        if (CurrentMovementMode != MovementMode.Falling)
+        if (CurrentMovementMode != MovementMode.Falling && CurrentMovementMode != MovementMode.WallRunning)
         {
             if (!grounded)
             {
@@ -115,6 +129,8 @@ public class CharacterMovement : MonoBehaviour
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
+
+            EnterFall();
 
             Jump();
 
@@ -170,7 +186,12 @@ public class CharacterMovement : MonoBehaviour
                 break;
 
             case MovementMode.Sliding:
-                return;
+                break;
+
+            case MovementMode.WallRunning:
+                rb.useGravity = false;
+
+                break;
         }
     }
 
@@ -212,6 +233,13 @@ public class CharacterMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    private void EnterWallRun()
+    {
+        rb.drag = wallrunDrag;
+
+        CurrentMovementMode = MovementMode.WallRunning;
     }
 
     private void EnterWalk()
