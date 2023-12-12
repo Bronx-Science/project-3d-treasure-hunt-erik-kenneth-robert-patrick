@@ -16,6 +16,7 @@ public class CharacterMovement : MonoBehaviour
     public float airMultiplier;
     bool readyToJump;
 
+    [Header("Crouching/Sliding")]
     public float crouchHeight;
     public float crouchSpeed;
 
@@ -23,7 +24,23 @@ public class CharacterMovement : MonoBehaviour
     public float slideMagnitude;
     public float slideDrag;
 
+    [Header("WallRunning")]
+    public LayerMask whatIsWall;
     public float wallrunDrag;
+    public float wallRunForce;
+    public float wallClimbSpeed;
+    public float wallrunMinSpeed;
+
+    public float wallCheckDistance;
+    private RaycastHit leftWallhit;
+    private RaycastHit rightWallhit;
+    private bool wallLeft;
+    private bool wallRight;
+
+    public KeyCode upwardsRunKey = KeyCode.LeftShift;
+    public KeyCode downwardsRunKey = KeyCode.LeftControl;
+    private bool upwardsRunning;
+    private bool downwardsRunning;
 
     [HideInInspector] public float walkSpeed;
     [HideInInspector] public float sprintSpeed;
@@ -95,16 +112,11 @@ public class CharacterMovement : MonoBehaviour
 
         if (CurrentMovementMode == MovementMode.Falling)
         {
-            Vector3 VelocityDirection = new Vector3(rb.velocity.x, 0, rb.velocity.y);
-            VelocityDirection.Normalize();
+            CheckForWall();
 
-            bool WallIsNear = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
-
-            if(WallIsNear)
+            if(wallLeft || wallRight)
             {
                 EnterWallRun();
-
-                return;
             }
 
             if (grounded)
@@ -126,7 +138,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         // when to jump
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (Input.GetKey(jumpKey) && readyToJump && (grounded || CurrentMovementMode == MovementMode.WallRunning))
         {
             readyToJump = false;
 
@@ -137,6 +149,18 @@ public class CharacterMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
 
             return;
+        }
+
+        if(CurrentMovementMode == MovementMode.WallRunning)
+        {
+            CheckForWall();
+
+            if ((!wallLeft && !wallRight) || rb.velocity.magnitude <= wallrunMinSpeed)
+            {
+                EnterFall();
+
+                return;
+            }
         }
 
         if (Input.GetKey(crouchKey) && grounded)
@@ -165,6 +189,11 @@ public class CharacterMovement : MonoBehaviour
 
     private void MovePlayer()
     {
+        if(CurrentMovementMode != MovementMode.WallRunning && !rb.useGravity)
+        {
+            rb.useGravity = true;
+        }
+
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
@@ -189,7 +218,7 @@ public class CharacterMovement : MonoBehaviour
                 break;
 
             case MovementMode.WallRunning:
-                rb.useGravity = false;
+                WallRun();
 
                 break;
         }
@@ -235,12 +264,49 @@ public class CharacterMovement : MonoBehaviour
         readyToJump = true;
     }
 
+    private void WallRun()
+    {
+        upwardsRunning = Input.GetKey(upwardsRunKey);
+        downwardsRunning = Input.GetKey(downwardsRunKey);
+
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
+
+        Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
+
+        if ((orientation.forward - wallForward).magnitude > (orientation.forward - -wallForward).magnitude)
+            wallForward = -wallForward;
+
+        // forward force
+        rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
+
+        // upwards/downwards force
+        if (upwardsRunning)
+            rb.velocity = new Vector3(rb.velocity.x, wallClimbSpeed, rb.velocity.z);
+        if (downwardsRunning)
+            rb.velocity = new Vector3(rb.velocity.x, -wallClimbSpeed, rb.velocity.z);
+
+        // push to wall force
+        if (!(wallLeft && horizontalInput > 0) && !(wallRight && horizontalInput < 0))
+            rb.AddForce(-wallNormal * 100, ForceMode.Force);
+    }
+
     private void EnterWallRun()
     {
+        rb.useGravity = false;
+
         rb.drag = wallrunDrag;
 
         CurrentMovementMode = MovementMode.WallRunning;
     }
+
+    private void CheckForWall()
+    {
+        wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallhit, wallCheckDistance, whatIsWall);
+        wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallhit, wallCheckDistance, whatIsWall);
+    }
+
 
     private void EnterWalk()
     {

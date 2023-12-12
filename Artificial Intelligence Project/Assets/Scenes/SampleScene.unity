@@ -490,7 +490,16 @@ MonoBehaviour:
   slideMinSpeed: 5
   slideMagnitude: 2
   slideDrag: 0.25
-  wallrunDrag: 0
+  whatIsWall:
+    serializedVersion: 2
+    m_Bits: 1
+  wallrunDrag: 1
+  wallRunForce: 10
+  wallClimbSpeed: 1
+  wallrunMinSpeed: 2
+  wallCheckDistance: 1
+  upwardsRunKey: 304
+  downwardsRunKey: 306
   walkSpeed: 0
   sprintSpeed: 0
   jumpKey: 32
@@ -498,7 +507,7 @@ MonoBehaviour:
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
   orientation: {fileID: 541737312}
 --- !u!54 &919903919
 Rigidbody:
