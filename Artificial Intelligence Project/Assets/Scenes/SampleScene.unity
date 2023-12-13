@@ -483,19 +483,19 @@ MonoBehaviour:
   groundDrag: 4
   airDrag: 1
   jumpForce: 7
-  jumpCooldown: 0.2
+  jumpCooldown: 0.5
   airMultiplier: 0.1
   crouchHeight: 1
   crouchSpeed: 2
-  slideMinSpeed: 5
+  slideMinSpeed: 2
   slideMagnitude: 2
   slideDrag: 0.25
   whatIsWall:
     serializedVersion: 2
     m_Bits: 1
   wallrunDrag: 1
-  wallRunForce: 10
-  wallClimbSpeed: 1
+  wallRunForce: 150
+  wallrunMaxSpeed: 10
   wallrunMinSpeed: 2
   wallCheckDistance: 1
   upwardsRunKey: 304
@@ -533,9 +533,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!1 &1513192834
 GameObject:
   m_ObjectHideFlags: 0

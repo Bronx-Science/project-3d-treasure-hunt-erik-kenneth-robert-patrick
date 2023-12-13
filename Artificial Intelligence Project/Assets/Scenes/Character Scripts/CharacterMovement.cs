@@ -28,10 +28,11 @@ public class CharacterMovement : MonoBehaviour
     public LayerMask whatIsWall;
     public float wallrunDrag;
     public float wallRunForce;
-    public float wallClimbSpeed;
+    public float wallrunMaxSpeed;
     public float wallrunMinSpeed;
-
     public float wallCheckDistance;
+
+    private bool CanWallRun;
     private RaycastHit leftWallhit;
     private RaycastHit rightWallhit;
     private bool wallLeft;
@@ -89,15 +90,23 @@ public class CharacterMovement : MonoBehaviour
 
         CurrentMovementMode = MovementMode.Walking;
     }
-
-    private void Update()
-    {
-    }
-
     private void FixedUpdate()
     {
         // ground check
         grounded = (Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround) && readyToJump);
+
+        if(grounded)
+        {
+            CanWallRun = true;
+        }
+
+        if(!CanWallRun)
+        {
+            if (readyToJump)
+            {
+                CanWallRun = true;
+            }
+        }
 
         MyInput();
         SpeedControl();
@@ -112,11 +121,16 @@ public class CharacterMovement : MonoBehaviour
 
         if (CurrentMovementMode == MovementMode.Falling)
         {
-            CheckForWall();
-
-            if(wallLeft || wallRight)
+            if(CanWallRun)
             {
-                EnterWallRun();
+                CheckForWall();
+
+                if (wallLeft || wallRight && Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z) > wallrunMinSpeed)
+                {
+                    CanWallRun = false;
+
+                    EnterWallRun();
+                }
             }
 
             if (grounded)
@@ -228,6 +242,17 @@ public class CharacterMovement : MonoBehaviour
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
+        if(CurrentMovementMode == MovementMode.WallRunning)
+        {
+            if (flatVel.magnitude > wallrunMaxSpeed)
+            {
+                Vector3 limitedVel = flatVel.normalized * moveSpeed;
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            }
+
+            return;
+        }    
+
         if (CurrentMovementMode == MovementMode.Walking)
         {
             // limit velocity if needed
@@ -276,20 +301,18 @@ public class CharacterMovement : MonoBehaviour
         Vector3 wallForward = Vector3.Cross(wallNormal, transform.up);
 
         if ((orientation.forward - wallForward).magnitude > (orientation.forward - -wallForward).magnitude)
+        {
             wallForward = -wallForward;
+        }
 
         // forward force
         rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
 
-        // upwards/downwards force
-        if (upwardsRunning)
-            rb.velocity = new Vector3(rb.velocity.x, wallClimbSpeed, rb.velocity.z);
-        if (downwardsRunning)
-            rb.velocity = new Vector3(rb.velocity.x, -wallClimbSpeed, rb.velocity.z);
-
         // push to wall force
         if (!(wallLeft && horizontalInput > 0) && !(wallRight && horizontalInput < 0))
+        {
             rb.AddForce(-wallNormal * 100, ForceMode.Force);
+        }
     }
 
     private void EnterWallRun()
