@@ -31,6 +31,8 @@ public class CharacterMovement : MonoBehaviour
     public float wallrunMaxSpeed;
     public float wallrunMinSpeed;
     public float wallCheckDistance;
+    public float wallRunCooldown;
+    public float wallrunJumpForce;
 
     private bool CanWallRun;
     private RaycastHit leftWallhit;
@@ -156,9 +158,9 @@ public class CharacterMovement : MonoBehaviour
         {
             readyToJump = false;
 
-            EnterFall();
-
             Jump();
+
+            EnterFall();
 
             Invoke(nameof(ResetJump), jumpCooldown);
 
@@ -279,6 +281,19 @@ public class CharacterMovement : MonoBehaviour
 
     private void Jump()
     {
+        if(CurrentMovementMode == MovementMode.WallRunning)
+        {
+            Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
+
+            rb.AddForce(Vector3.Normalize((transform.up + wallNormal)) * wallrunJumpForce, ForceMode.Impulse);
+
+            CanWallRun = false;
+
+            Invoke(nameof(ResetWallRun), wallRunCooldown);
+
+            return;
+        }
+
         // reset y velocity
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
@@ -294,7 +309,7 @@ public class CharacterMovement : MonoBehaviour
         upwardsRunning = Input.GetKey(upwardsRunKey);
         downwardsRunning = Input.GetKey(downwardsRunKey);
 
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        //rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
 
@@ -306,7 +321,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         // forward force
-        rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
+        rb.AddForce(wallForward * wallRunForce + moveDirection * moveSpeed, ForceMode.Force);
 
         // push to wall force
         if (!(wallLeft && horizontalInput > 0) && !(wallRight && horizontalInput < 0))
@@ -328,6 +343,11 @@ public class CharacterMovement : MonoBehaviour
     {
         wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallhit, wallCheckDistance, whatIsWall);
         wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallhit, wallCheckDistance, whatIsWall);
+    }
+
+    private void ResetWallRun()
+    {
+        CanWallRun = true;
     }
 
 
