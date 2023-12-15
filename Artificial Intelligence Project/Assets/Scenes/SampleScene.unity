@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -594,7 +594,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919903913}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 2c93c760652371b4cb3d0da152f5d33f, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -689,8 +689,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52e00f8dbc23c7243b3292423d7ae1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 7
-  groundDrag: 4
+  moveSpeed: 10
+  groundDrag: 5
   airDrag: 1
   jumpForce: 7
   jumpCooldown: 0.2
@@ -699,17 +699,18 @@ MonoBehaviour:
   crouchSpeed: 2
   slideMinSpeed: 2
   slideMagnitude: 1.75
-  slideDrag: 0.1
+  slideDrag: 1
   whatIsWall:
     serializedVersion: 2
     m_Bits: 1
   wallrunDrag: 1
-  wallRunForce: 150
-  wallrunMaxSpeed: 10
-  wallrunMinSpeed: 0
-  wallCheckDistance: 1
-  wallRunCooldown: 1
-  wallrunJumpForce: 10
+  wallRunForce: 25
+  wallrunMaxSpeed: 8
+  wallCheckDistance: 0.75
+  wallRunCooldown: 0.5
+  wallrunJumpForce: 8
+  wallrunInitialYVelocity: 3
+  wallrunGravity: 0.25
   upwardsRunKey: 304
   downwardsRunKey: 306
   walkSpeed: 0
@@ -1105,7 +1106,7 @@ Transform:
   m_GameObject: {fileID: 1629028929}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 100, z: 5}
+  m_LocalPosition: {x: 5, y: 10, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1228,7 +1229,7 @@ Transform:
   m_GameObject: {fileID: 1914838161}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.824633, y: -7.3570867, z: 17.19661}
+  m_LocalPosition: {x: 70, y: -70, z: 170}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

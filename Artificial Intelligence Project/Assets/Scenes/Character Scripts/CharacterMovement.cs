@@ -29,10 +29,11 @@ public class CharacterMovement : MonoBehaviour
     public float wallrunDrag;
     public float wallRunForce;
     public float wallrunMaxSpeed;
-    public float wallrunMinSpeed;
     public float wallCheckDistance;
     public float wallRunCooldown;
     public float wallrunJumpForce;
+    public float wallrunInitialYVelocity;
+    public float wallrunGravity;
 
     private bool CanWallRun;
     private RaycastHit leftWallhit;
@@ -102,14 +103,6 @@ public class CharacterMovement : MonoBehaviour
             CanWallRun = true;
         }
 
-        if(!CanWallRun)
-        {
-            if (readyToJump)
-            {
-                CanWallRun = true;
-            }
-        }
-
         MyInput();
         SpeedControl();
 
@@ -127,7 +120,7 @@ public class CharacterMovement : MonoBehaviour
             {
                 CheckForWall();
 
-                if (wallLeft || wallRight && Mathf.Abs(rb.velocity.x) + Mathf.Abs(rb.velocity.z) > wallrunMinSpeed)
+                if (wallLeft || wallRight)
                 {
                     CanWallRun = false;
 
@@ -171,7 +164,7 @@ public class CharacterMovement : MonoBehaviour
         {
             CheckForWall();
 
-            if ((!wallLeft && !wallRight) || rb.velocity.magnitude <= wallrunMinSpeed)
+            if (!wallLeft && !wallRight)
             {
                 EnterFall();
 
@@ -309,7 +302,7 @@ public class CharacterMovement : MonoBehaviour
         upwardsRunning = Input.GetKey(upwardsRunKey);
         downwardsRunning = Input.GetKey(downwardsRunKey);
 
-        //rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallrunGravity, rb.velocity.z);
 
         Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
 
@@ -321,7 +314,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         // forward force
-        rb.AddForce(wallForward * wallRunForce + moveDirection * moveSpeed, ForceMode.Force);
+        rb.AddForce(wallForward * wallRunForce, ForceMode.Force);
 
         // push to wall force
         if (!(wallLeft && horizontalInput > 0) && !(wallRight && horizontalInput < 0))
@@ -333,6 +326,10 @@ public class CharacterMovement : MonoBehaviour
     private void EnterWallRun()
     {
         rb.useGravity = false;
+
+        float YVelocity = Mathf.Clamp(rb.velocity.y + wallrunInitialYVelocity, -wallrunInitialYVelocity, wallrunInitialYVelocity);
+
+        rb.velocity = new Vector3(rb.velocity.x, YVelocity, rb.velocity.z);
 
         rb.drag = wallrunDrag;
 
