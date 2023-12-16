@@ -5,8 +5,19 @@ using TMPro;
 
 public class CharacterMovement : MonoBehaviour
 {
+    [Header("Stamina")]
+    public float maxStamina;
+    public float staminaRegenCooldown;
+    public float staminaRegenRate;
+
+    private float Stamina;
+    private float staminaLastDrainTime;
+
     [Header("Movement")]
     public float moveSpeed;
+    public float sprintMoveSpeed;
+    private bool Sprinting;
+    public float sprintStaminaCost;
 
     public float groundDrag;
     public float airDrag;
@@ -41,8 +52,6 @@ public class CharacterMovement : MonoBehaviour
     private bool wallLeft;
     private bool wallRight;
 
-    public KeyCode upwardsRunKey = KeyCode.LeftShift;
-    public KeyCode downwardsRunKey = KeyCode.LeftControl;
     private bool upwardsRunning;
     private bool downwardsRunning;
 
@@ -51,9 +60,8 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
-
-    [Header("Keybinds")]
-    public KeyCode crouchKey = KeyCode.LeftShift;
+    public KeyCode crouchKey = KeyCode.LeftControl;
+    public KeyCode sprintKey = KeyCode.LeftShift;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -91,6 +99,8 @@ public class CharacterMovement : MonoBehaviour
 
         readyToJump = true;
 
+        Stamina = maxStamina;
+
         CurrentMovementMode = MovementMode.Walking;
     }
     private void FixedUpdate()
@@ -116,7 +126,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (CurrentMovementMode == MovementMode.Falling)
         {
-            if(CanWallRun)
+            if (CanWallRun)
             {
                 CheckForWall();
 
@@ -160,7 +170,7 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
-        if(CurrentMovementMode == MovementMode.WallRunning)
+        if (CurrentMovementMode == MovementMode.WallRunning)
         {
             CheckForWall();
 
@@ -190,7 +200,24 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
-        if (grounded)
+        if (CurrentMovementMode == MovementMode.Walking)
+        {
+            if (Input.GetKey(sprintKey) && Stamina >= 10)
+            {
+                Sprinting = true;
+
+                return;
+            }
+
+            if (!Input.GetKey(sprintKey) || Stamina <= 1)
+            {
+                Sprinting = false;
+
+                return;
+            }
+        }
+
+        if (CurrentMovementMode != MovementMode.Walking && grounded)
         {
             EnterWalk();
         }
@@ -203,12 +230,24 @@ public class CharacterMovement : MonoBehaviour
             rb.useGravity = true;
         }
 
+        if(CurrentMovementMode != MovementMode.Walking)
+        {
+            Sprinting = false;
+        }
+
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         switch (CurrentMovementMode)
         {
             case MovementMode.Walking:
+                if(Sprinting)
+                {
+                    rb.AddForce(moveDirection.normalized * sprintMoveSpeed * 10f, ForceMode.Force);
+
+                    break;
+                }
+
                 rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
                 break;
@@ -231,6 +270,26 @@ public class CharacterMovement : MonoBehaviour
 
                 break;
         }
+
+        if(Sprinting)
+        {
+            DrainStamina(sprintStaminaCost / 60);
+        }
+
+        if(Time.time - staminaLastDrainTime >= staminaRegenCooldown)
+        {
+            Stamina += staminaRegenRate;
+
+            if(Stamina < 0)
+            {
+                Stamina = 0;
+            }
+
+            if(Stamina > maxStamina)
+            {
+                Stamina = maxStamina;
+            }
+        }
     }
 
     private void SpeedControl()
@@ -250,6 +309,17 @@ public class CharacterMovement : MonoBehaviour
 
         if (CurrentMovementMode == MovementMode.Walking)
         {
+            if(Sprinting)
+            {
+                if (flatVel.magnitude > moveSpeed)
+                {
+                    Vector3 limitedVel = flatVel.normalized * sprintMoveSpeed;
+                    rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+                }
+
+                return;
+            }
+
             // limit velocity if needed
             if (flatVel.magnitude > moveSpeed)
             {
@@ -260,7 +330,7 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
-        if(CurrentMovementMode == MovementMode.Crouching)
+        if (CurrentMovementMode == MovementMode.Crouching)
         {
             if(flatVel.magnitude > slideMinSpeed)
             {
@@ -278,6 +348,7 @@ public class CharacterMovement : MonoBehaviour
         {
             Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
 
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             rb.AddForce(Vector3.Normalize((transform.up + wallNormal)) * wallrunJumpForce, ForceMode.Impulse);
 
             CanWallRun = false;
@@ -299,9 +370,6 @@ public class CharacterMovement : MonoBehaviour
 
     private void WallRun()
     {
-        upwardsRunning = Input.GetKey(upwardsRunKey);
-        downwardsRunning = Input.GetKey(downwardsRunKey);
-
         rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y - wallrunGravity, rb.velocity.z);
 
         Vector3 wallNormal = wallRight ? rightWallhit.normal : leftWallhit.normal;
@@ -327,9 +395,9 @@ public class CharacterMovement : MonoBehaviour
     {
         rb.useGravity = false;
 
-        float YVelocity = Mathf.Clamp(rb.velocity.y + wallrunInitialYVelocity, -wallrunInitialYVelocity, wallrunInitialYVelocity);
+        //float YVelocity = Mathf.Clamp(rb.velocity.y + wallrunInitialYVelocity, -wallrunInitialYVelocity, wallrunInitialYVelocity);
 
-        rb.velocity = new Vector3(rb.velocity.x, YVelocity, rb.velocity.z);
+        rb.velocity = new Vector3(rb.velocity.x, wallrunInitialYVelocity, rb.velocity.z);
 
         rb.drag = wallrunDrag;
 
@@ -346,7 +414,6 @@ public class CharacterMovement : MonoBehaviour
     {
         CanWallRun = true;
     }
-
 
     private void EnterWalk()
     {
@@ -394,5 +461,12 @@ public class CharacterMovement : MonoBehaviour
     private void CrouchHeight()
     {
         Capsule.height = crouchHeight;
+    }
+
+    private void DrainStamina(float DrainAmount)
+    {
+        Stamina -= DrainAmount;
+
+        staminaLastDrainTime = Time.time;
     }
 }
