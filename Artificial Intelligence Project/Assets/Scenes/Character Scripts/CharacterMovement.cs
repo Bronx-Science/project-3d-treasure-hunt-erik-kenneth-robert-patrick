@@ -469,4 +469,9 @@ public class CharacterMovement : MonoBehaviour
 
         staminaLastDrainTime = Time.time;
     }
+
+    public float GetStamina()
+    {
+        return Stamina;
+    }
 }
