@@ -34,12 +34,14 @@ public class CharacterMovement : MonoBehaviour
     public float slideMinSpeed;
     public float slideMagnitude;
     public float slideDrag;
+    public float slideStaminaCost;
 
     [Header("WallRunning")]
     public LayerMask whatIsWall;
     public float wallrunDrag;
     public float wallRunForce;
     public float wallrunMaxSpeed;
+    public float sprintWallRunMoveSpeed;
     public float wallCheckDistance;
     public float wallRunCooldown;
     public float wallrunJumpForce;
@@ -186,7 +188,7 @@ public class CharacterMovement : MonoBehaviour
         {
             if (rb.velocity.magnitude >= slideMinSpeed)
             {
-                if (CurrentMovementMode != MovementMode.Sliding && CurrentMovementMode != MovementMode.Crouching)
+                if (CurrentMovementMode != MovementMode.Sliding && CurrentMovementMode != MovementMode.Crouching && Stamina >= slideStaminaCost)
                 {
                     EnterSlide();
                 }
@@ -200,7 +202,7 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
-        if (CurrentMovementMode == MovementMode.Walking)
+        if (CurrentMovementMode == MovementMode.Walking || CurrentMovementMode == MovementMode.WallRunning)
         {
             if (Input.GetKey(sprintKey) && Stamina >= 10)
             {
@@ -230,7 +232,7 @@ public class CharacterMovement : MonoBehaviour
             rb.useGravity = true;
         }
 
-        if(CurrentMovementMode != MovementMode.Walking)
+        if(CurrentMovementMode != MovementMode.Walking && CurrentMovementMode != MovementMode.WallRunning)
         {
             Sprinting = false;
         }
@@ -298,6 +300,17 @@ public class CharacterMovement : MonoBehaviour
 
         if(CurrentMovementMode == MovementMode.WallRunning)
         {
+            if (Sprinting)
+            {
+                if (flatVel.magnitude > moveSpeed)
+                {
+                    Vector3 limitedVel = flatVel.normalized * sprintWallRunMoveSpeed;
+                    rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+                }
+
+                return;
+            }
+
             if (flatVel.magnitude > wallrunMaxSpeed)
             {
                 Vector3 limitedVel = flatVel.normalized * moveSpeed;
@@ -445,6 +458,8 @@ public class CharacterMovement : MonoBehaviour
     private void EnterSlide()
     {
         CrouchHeight();
+
+        DrainStamina(slideStaminaCost);
 
         rb.drag = slideDrag;
 
