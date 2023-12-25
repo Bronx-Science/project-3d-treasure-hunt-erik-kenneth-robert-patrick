@@ -45,7 +45,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if(Random.Range(0.0f, 1.0f) > ChanceOfHigherWall)
+                    if(Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
@@ -66,7 +66,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall)
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
@@ -86,7 +86,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall)
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
@@ -105,7 +105,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall)
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 

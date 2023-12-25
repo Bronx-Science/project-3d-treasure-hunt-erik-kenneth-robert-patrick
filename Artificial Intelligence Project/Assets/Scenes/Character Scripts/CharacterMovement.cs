@@ -103,7 +103,7 @@ public class CharacterMovement : MonoBehaviour
 
         Stamina = maxStamina;
 
-        CurrentMovementMode = MovementMode.Walking;
+        EnterWalk();
     }
     private void FixedUpdate()
     {
@@ -186,9 +186,9 @@ public class CharacterMovement : MonoBehaviour
 
         if (Input.GetKey(crouchKey) && grounded)
         {
-            if (rb.velocity.magnitude >= slideMinSpeed)
+            if (rb.velocity.magnitude >= slideMinSpeed && Stamina >= slideStaminaCost)
             {
-                if (CurrentMovementMode != MovementMode.Sliding && CurrentMovementMode != MovementMode.Crouching && Stamina >= slideStaminaCost)
+                if (CurrentMovementMode != MovementMode.Sliding && CurrentMovementMode != MovementMode.Crouching)
                 {
                     EnterSlide();
                 }
@@ -196,7 +196,10 @@ public class CharacterMovement : MonoBehaviour
 
             else
             {
-                EnterCrouch();
+                if (CurrentMovementMode != MovementMode.Crouching)
+                {
+                    EnterCrouch();
+                }
             }
 
             return;
