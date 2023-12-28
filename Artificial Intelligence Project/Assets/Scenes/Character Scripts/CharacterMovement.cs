@@ -16,7 +16,7 @@ public class CharacterMovement : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed;
     public float sprintMoveSpeed;
-    private bool Sprinting;
+    public bool Sprinting;
     public float sprintStaminaCost;
 
     public float groundDrag;
@@ -68,7 +68,7 @@ public class CharacterMovement : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     public Transform orientation;
 

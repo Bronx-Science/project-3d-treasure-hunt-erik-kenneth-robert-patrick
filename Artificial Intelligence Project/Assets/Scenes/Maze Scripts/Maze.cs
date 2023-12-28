@@ -45,12 +45,12 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if(Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
+                    if(Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 3 || j > 3)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
                         Wall.transform.parent = transform;
-                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth + WallWidth / 2), YOffset + 1.5f, ZOffset + (j * WallWidth));
+                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth + WallWidth / 2), YOffset + 1.9f, ZOffset + (j * WallWidth));
                         Wall.transform.Rotate(0, 90, 0);
                     }
                 }
@@ -66,12 +66,12 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 3 || j > 3)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
                         Wall.transform.parent = transform;
-                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth - WallWidth / 2), YOffset + 1.5f, ZOffset + (j * WallWidth));
+                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth - WallWidth / 2), YOffset + 1.9f, ZOffset + (j * WallWidth));
                         Wall.transform.Rotate(0, 90, 0);
                     }
                 }
@@ -86,12 +86,12 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 3 || j > 3)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
                         Wall.transform.parent = transform;
-                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth), YOffset + 1.5f, ZOffset + (j * WallWidth + WallWidth / 2));
+                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth), YOffset + 1.9f, ZOffset + (j * WallWidth + WallWidth / 2));
                     }
                 }
 
@@ -105,12 +105,12 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 5 && j > 5)
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && i > 3 || j > 3)
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
                         Wall.transform.parent = transform;
-                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth), YOffset + 1.5f, ZOffset + (j * WallWidth - WallWidth / 2));
+                        Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth), YOffset + 1.9f, ZOffset + (j * WallWidth - WallWidth / 2));
                     }
                 }
 
@@ -119,7 +119,7 @@ public class Maze : MonoBehaviour
                     GameObject Wall = Instantiate(MazeWall);
 
                     Wall.transform.parent = transform;
-                    Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth + WallWidth / 2), YOffset + 1.5f, ZOffset + (j * WallWidth));
+                    Wall.transform.localPosition = new Vector3(XOffset + (i * WallWidth + WallWidth / 2), YOffset + 1.9f, ZOffset + (j * WallWidth));
                     Wall.transform.Rotate(0, 90, 0);
                 }
             }
