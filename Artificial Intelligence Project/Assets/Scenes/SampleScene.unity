@@ -920,7 +920,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b5986a429eaa572408469214d5c5bf4c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -2164,7 +2164,7 @@ MonoBehaviour:
   WallWidth: 15
   MazeDimensions: 10
   MazeStartPosition: {fileID: 1629028929}
-  ChanceOfHigherWall: 0
+  ChanceOfHigherWall: 1
 --- !u!4 &1513192836
 Transform:
   m_ObjectHideFlags: 0
@@ -2899,7 +2899,7 @@ Transform:
   m_GameObject: {fileID: 1800120662}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.51, y: 4.73, z: 3.94}
+  m_LocalPosition: {x: 73.5, y: 4.73, z: 62.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2929,6 +2929,9 @@ MonoBehaviour:
   randomDestinationArea: 75
   RandomDestinationXOffset: 75
   RandomDestinationZOffset: 75
+  attackRange: 0
+  attackCooldown: 0
+  attackDamage: 0
 --- !u!136 &1800120665
 CapsuleCollider:
   m_ObjectHideFlags: 0

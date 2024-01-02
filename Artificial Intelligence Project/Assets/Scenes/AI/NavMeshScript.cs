@@ -9,7 +9,7 @@ public class NavMeshScript : MonoBehaviour
 
     private void Start()
     {
-        Invoke(nameof(BuildNavMesh), 5);
+        Invoke(nameof(BuildNavMesh), 1);
     }
 
     void BuildNavMesh()

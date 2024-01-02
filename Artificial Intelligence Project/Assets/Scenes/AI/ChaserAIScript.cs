@@ -22,6 +22,10 @@ public class ChaserAIScript : MonoBehaviour
     public float RandomDestinationXOffset;
     public float RandomDestinationZOffset;
 
+    public float attackRange;
+    public float attackCooldown;
+    public float attackDamage;
+
     enum ChaserStates
     {
         Roaming,
@@ -35,12 +39,17 @@ public class ChaserAIScript : MonoBehaviour
     {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
-        bChasingPlayer = true;
+        EnterRoam();
 
-        CurrentState = ChaserStates.Chasing;
+        ChaseSound.enabled = false;
     }
     void FixedUpdate()
     {
+        if(Time.time < 1)
+        {
+            return;
+        }
+
         ChangeState();
 
         AIAction();
@@ -61,6 +70,7 @@ public class ChaserAIScript : MonoBehaviour
                 break;
 
             case ChaserStates.Attacking:
+                agent.destination = transform.position;
 
                 break;
         }
@@ -73,6 +83,13 @@ public class ChaserAIScript : MonoBehaviour
 
         if(CanSeePlayer) 
         {
+            float distanceFromPlayer = (transform.position - Playerpos.position).magnitude;
+
+            if(distanceFromPlayer > attackRange)
+            {
+                EnterAttack();
+            }
+
             if(CurrentState == ChaserStates.Roaming)
             {
                 EnterChase();
@@ -88,6 +105,16 @@ public class ChaserAIScript : MonoBehaviour
         }
     }
 
+    void EnterAttack()
+    {
+        Invoke(nameof(ExitAttack), attackCooldown);
+    }
+
+    void ExitAttack()
+    {
+        EnterRoam();
+    }
+
     void Roam()
     {
         if(Time.time - lastTimeSinceChangeDestination > timeBetweenChangeDestination)
@@ -97,7 +124,6 @@ public class ChaserAIScript : MonoBehaviour
             if(bPrevChasingPlayer)
             {
                 bPrevChasingPlayer = false;
-                bChasingPlayer = false;
 
                 ChaseSound.enabled = false;
 
@@ -120,7 +146,7 @@ public class ChaserAIScript : MonoBehaviour
             }
         }
 
-        if (bChasingPlayer && !bPrevChasingPlayer)
+        if (bChasingPlayer || bPrevChasingPlayer)
         {
             agent.destination = Playerpos.position;
         }
@@ -129,6 +155,8 @@ public class ChaserAIScript : MonoBehaviour
     void EnterRoam()
     {
         CurrentState = ChaserStates.Roaming;
+
+        bChasingPlayer = false;
 
         lastTimeSinceChangeDestination = Time.time;
     }
