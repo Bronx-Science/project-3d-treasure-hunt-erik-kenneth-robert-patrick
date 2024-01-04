@@ -17,6 +17,10 @@ public class ChaserAIScript : MonoBehaviour
     private float lastTimeSinceChangeDestination;
     private bool bPrevChasingPlayer;
     private bool bChasingPlayer;
+
+    public float fovDist;
+    public float fovAngle;
+
     public float timeBetweenChangeDestination;
     public float randomDestinationArea;
     public float RandomDestinationXOffset;
@@ -78,7 +82,7 @@ public class ChaserAIScript : MonoBehaviour
 
     void ChangeState()
     {
-        bool CanSeePlayer = !Physics.Linecast(transform.position, Playerpos.position, whatIsObject);
+        bool CanSeePlayer = SeePlayer();
         Debug.DrawLine(transform.position, Playerpos.position); 
 
         if(CanSeePlayer) 
@@ -165,7 +169,7 @@ public class ChaserAIScript : MonoBehaviour
     {
         CurrentState = ChaserStates.Chasing;
 
-        if(!bPrevChasingPlayer)
+        if (!bPrevChasingPlayer)
         {
             SeePlayerSound.Play();
 
@@ -175,4 +179,18 @@ public class ChaserAIScript : MonoBehaviour
 
         bPrevChasingPlayer = true;
     }
+
+    bool SeePlayer()
+    {
+        Vector3 direction = Playerpos.position - transform.position;
+        float angle = Vector3.Angle(direction, transform.forward);
+
+        if (!Physics.Linecast(transform.position, Playerpos.position, whatIsObject) && direction.magnitude < fovDist && angle < fovAngle)
+        {
+            return true;
+        }       
+
+        return false;
+    }
+
 }
