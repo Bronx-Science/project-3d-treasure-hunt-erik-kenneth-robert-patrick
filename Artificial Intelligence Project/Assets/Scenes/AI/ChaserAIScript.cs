@@ -11,6 +11,8 @@ public class ChaserAIScript : MonoBehaviour
     public LayerMask whatIsObject;
     private ChaserStates CurrentState;
 
+    public StatComponent playerStats;
+
     public AudioSource ChaseSound;
     public AudioSource SeePlayerSound;
 
@@ -89,7 +91,7 @@ public class ChaserAIScript : MonoBehaviour
         {
             float distanceFromPlayer = (transform.position - Playerpos.position).magnitude;
 
-            if(distanceFromPlayer > attackRange)
+            if(distanceFromPlayer < attackRange && CurrentState != ChaserStates.Attacking)
             {
                 EnterAttack();
             }
@@ -112,6 +114,8 @@ public class ChaserAIScript : MonoBehaviour
     void EnterAttack()
     {
         Invoke(nameof(ExitAttack), attackCooldown);
+
+        playerStats.Damage(attackDamage);
     }
 
     void ExitAttack()
@@ -192,5 +196,4 @@ public class ChaserAIScript : MonoBehaviour
 
         return false;
     }
-
 }
