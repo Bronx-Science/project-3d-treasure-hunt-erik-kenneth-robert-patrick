@@ -1119,6 +1119,7 @@ GameObject:
   - component: {fileID: 631786505}
   - component: {fileID: 631786507}
   - component: {fileID: 631786509}
+  - component: {fileID: 631786510}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -1205,6 +1206,22 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 1799432205}
+--- !u!114 &631786510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631786503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb72148fcf8d4184da7ac96699ca77b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camTransform: {fileID: 631786504}
+  shakeDuration: 10
+  shakeAmount: 0.5
+  decreaseFactor: 1
 --- !u!1 &699642488
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,8 +1573,8 @@ MonoBehaviour:
   maxStamina: 100
   staminaRegenCooldown: 4
   staminaRegenRate: 0.5
-  moveSpeed: 3.5
-  sprintMoveSpeed: 8
+  moveSpeed: 5
+  sprintMoveSpeed: 10
   Sprinting: 0
   sprintStaminaCost: 20
   groundDrag: 7
@@ -1577,7 +1594,7 @@ MonoBehaviour:
   wallrunDrag: 1
   wallRunForce: 25
   wallrunMaxSpeed: 3.5
-  sprintWallRunMoveSpeed: 8
+  sprintWallRunMoveSpeed: 10
   wallCheckDistance: 1.25
   wallRunCooldown: 0.5
   wallrunJumpForce: 15
@@ -2296,7 +2313,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 2
-  m_Speed: 3.5
+  m_Speed: 8
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -3004,7 +3021,7 @@ MonoBehaviour:
   RandomDestinationXOffset: 75
   RandomDestinationZOffset: 75
   attackRange: 5
-  attackCooldown: 5
+  attackCooldown: 3
   attackDamage: 50
 --- !u!136 &1800120665
 CapsuleCollider:
@@ -3039,7 +3056,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 3
-  m_Speed: 4
+  m_Speed: 7
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

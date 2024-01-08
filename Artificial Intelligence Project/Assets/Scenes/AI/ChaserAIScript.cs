@@ -91,14 +91,18 @@ public class ChaserAIScript : MonoBehaviour
         {
             float distanceFromPlayer = (transform.position - Playerpos.position).magnitude;
 
-            if(distanceFromPlayer < attackRange && CurrentState != ChaserStates.Attacking)
+            if(distanceFromPlayer < attackRange && CurrentState == ChaserStates.Chasing)
             {
                 EnterAttack();
+
+                return;
             }
 
             if(CurrentState == ChaserStates.Roaming)
             {
                 EnterChase();
+
+                return;
             }
         }
 
@@ -107,12 +111,16 @@ public class ChaserAIScript : MonoBehaviour
             if(CurrentState == ChaserStates.Chasing)
             {
                 EnterRoam();
+
+                return;
             }
         }
     }
 
     void EnterAttack()
     {
+        CurrentState = ChaserStates.Attacking;
+
         Invoke(nameof(ExitAttack), attackCooldown);
 
         playerStats.Damage(attackDamage);
