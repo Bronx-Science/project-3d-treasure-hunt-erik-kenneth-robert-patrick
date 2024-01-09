@@ -11,6 +11,7 @@ public class ChaserAIScript : MonoBehaviour
     public LayerMask whatIsObject;
     private ChaserStates CurrentState;
 
+    public CameraShake playerCameraShake;
     public StatComponent playerStats;
 
     public AudioSource ChaseSound;
@@ -190,6 +191,8 @@ public class ChaserAIScript : MonoBehaviour
         }
 
         bPrevChasingPlayer = true;
+
+        playerCameraShake.shakeDuration = 5;
     }
 
     bool SeePlayer()
