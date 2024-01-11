@@ -1582,7 +1582,7 @@ MonoBehaviour:
   jumpForce: 10
   jumpCooldown: 0.2
   airMultiplier: 0.2
-  crouchHeight: 1
+  crouchHeight: 0.9
   crouchSpeed: 2
   slideMinSpeed: 2
   slideMagnitude: 1.75
@@ -2248,11 +2248,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b76618c1b3f3b41bade269df755e3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MazeWall: {fileID: 2176495713712592470, guid: b125b75f2cd28284a841002099c7daa6, type: 3}
+  MazeWall: {fileID: 4712039987750639494, guid: a6eea3be280cddc4dbd7c13faf3253ba, type: 3}
+  MazeWallTorch: {fileID: 2176495713712592470, guid: b125b75f2cd28284a841002099c7daa6, type: 3}
+  ChanceOfTorch: 0.9
   WallWidth: 15
   MazeDimensions: 10
   MazeStartPosition: {fileID: 1629028929}
-  ChanceOfHigherWall: 1
+  ChanceOfHigherWall: 0.975
 --- !u!4 &1513192836
 Transform:
   m_ObjectHideFlags: 0
