@@ -13,9 +13,15 @@ public class Maze : MonoBehaviour
     public GameObject MazeStartPosition;
     public float ChanceOfHigherWall;
 
+    public GameObject WallToBeRemoved;
+
     // Start is called before the first frame update
     void Start()
     {
+        WallToBeRemoved.SetActive(false);
+        Invoke(nameof(SpawnWall), 2);
+        Invoke(nameof(RemoveWall), 5);
+
         mazeUnits = new MazeUnit[MazeDimensions, MazeDimensions];
 
         for (int i = 0; i < MazeDimensions; i++)
@@ -188,6 +194,11 @@ public class Maze : MonoBehaviour
             mazeUnits[xPos, yPos].TopWall = false;
         }
 
+        if(xPos == 0 && yPos == 0)
+        {
+            mazeUnits[xPos, yPos].LeftWall = false;
+        }
+
         if (TRBL == 1)
         {
             mazeUnits[xPos, yPos].TopWall = false;
@@ -253,6 +264,16 @@ public class Maze : MonoBehaviour
                 }
             }
         }
+    }
+
+    void SpawnWall()
+    {
+        WallToBeRemoved.SetActive(true);
+    }
+
+    void RemoveWall()
+    {
+        WallToBeRemoved.SetActive(false);
     }
 }
         
