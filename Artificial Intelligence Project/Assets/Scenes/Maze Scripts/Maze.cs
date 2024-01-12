@@ -19,7 +19,7 @@ public class Maze : MonoBehaviour
     void Start()
     {
         WallToBeRemoved.SetActive(false);
-        Invoke(nameof(SpawnWall), 2);
+        Invoke(nameof(SpawnWall), 1.5f);
         Invoke(nameof(RemoveWall), 5);
 
         mazeUnits = new MazeUnit[MazeDimensions, MazeDimensions];

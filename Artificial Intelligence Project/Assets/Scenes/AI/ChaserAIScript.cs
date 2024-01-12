@@ -20,6 +20,7 @@ public class ChaserAIScript : MonoBehaviour
     private float lastTimeSinceChangeDestination;
     private bool bPrevChasingPlayer;
     private bool bChasingPlayer;
+    private float distanceFromPlayer;
 
     public float fovDist;
     public float fovAngle;
@@ -52,7 +53,7 @@ public class ChaserAIScript : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if(Time.time < 1)
+        if(Time.time < 2)
         {
             return;
         }
@@ -72,6 +73,10 @@ public class ChaserAIScript : MonoBehaviour
                 break;
 
             case ChaserStates.Chasing:
+                playerCameraShake.shakeDuration = 5;
+
+                playerCameraShake.shakeAmount = Mathf.Lerp(0.75f, 0, distanceFromPlayer / 75);
+
                 agent.destination = Playerpos.position;
 
                 break;
@@ -90,7 +95,7 @@ public class ChaserAIScript : MonoBehaviour
 
         if(CanSeePlayer) 
         {
-            float distanceFromPlayer = (transform.position - Playerpos.position).magnitude;
+            distanceFromPlayer = (transform.position - Playerpos.position).magnitude;
 
             if(distanceFromPlayer < attackRange && CurrentState == ChaserStates.Chasing)
             {
@@ -124,6 +129,11 @@ public class ChaserAIScript : MonoBehaviour
 
         Invoke(nameof(ExitAttack), attackCooldown);
 
+        Invoke(nameof(DamagePlayer), 1);
+    }
+
+    void DamagePlayer()
+    {
         playerStats.Damage(attackDamage);
     }
 
@@ -191,8 +201,6 @@ public class ChaserAIScript : MonoBehaviour
         }
 
         bPrevChasingPlayer = true;
-
-        playerCameraShake.shakeDuration = 5;
     }
 
     bool SeePlayer()
