@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StatComponent : MonoBehaviour
 {
@@ -27,5 +28,6 @@ public class StatComponent : MonoBehaviour
     public void EndGame()
     {
         Destroy(gameObject);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

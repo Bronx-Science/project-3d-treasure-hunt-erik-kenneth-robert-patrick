@@ -3052,6 +3052,7 @@ GameObject:
   - component: {fileID: 1579308135}
   - component: {fileID: 1579308134}
   - component: {fileID: 1579308133}
+  - component: {fileID: 1579308136}
   m_Layer: 0
   m_Name: Crawler
   m_TagString: Untagged
@@ -3121,6 +3122,19 @@ CapsuleCollider:
   m_Direction: 2
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1579308135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1579308131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869b013110c54d5419f472f6af0c8138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Playerpos: {fileID: 541737312}
+--- !u!114 &1579308136
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
