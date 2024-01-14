@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrawlerAIScript : MonoBehaviour
+public class CrawlerAIScript : AI
 {
     public Transform Playerpos;
     UnityEngine.AI.NavMeshAgent agent;
@@ -15,5 +15,19 @@ public class CrawlerAIScript : MonoBehaviour
     void Update()
     {
         agent.destination = Playerpos.position;
+    }
+
+    public void Stun(float StunDuration)
+    {
+        agent.speed = 0;
+
+        //PlayScream();
+
+        Invoke(nameof(ExitStun), StunDuration);
+    }
+
+    void ExitStun()
+    {
+        //agent.speed = defaultspeed;
     }
 }

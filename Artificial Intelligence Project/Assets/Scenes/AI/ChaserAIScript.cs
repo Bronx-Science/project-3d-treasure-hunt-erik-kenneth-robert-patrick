@@ -4,18 +4,21 @@ using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class ChaserAIScript : MonoBehaviour
+public class ChaserAIScript : AI
 {
     public Transform Playerpos;
     UnityEngine.AI.NavMeshAgent agent;
     public LayerMask whatIsObject;
     private ChaserStates CurrentState;
 
+    public Animator AIAnimator;
     public CameraShake playerCameraShake;
     public StatComponent playerStats;
 
     public AudioSource ChaseSound;
     public AudioSource SeePlayerSound;
+    public AudioSource SeePlayerSound1;
+    public AudioSource SeePlayerSound2;
 
     private float lastTimeSinceChangeDestination;
     private bool bPrevChasingPlayer;
@@ -34,6 +37,10 @@ public class ChaserAIScript : MonoBehaviour
     public float attackCooldown;
     public float attackDamage;
 
+    private bool bNoStart;
+
+    private float defaultspeed;
+
     enum ChaserStates
     {
         Roaming,
@@ -47,13 +54,19 @@ public class ChaserAIScript : MonoBehaviour
     {
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
+        defaultspeed = agent.speed;
+
         EnterRoam();
 
         ChaseSound.enabled = false;
+
+        bNoStart = true;
+
+        Invoke(nameof(StartMovement), 2);
     }
     void FixedUpdate()
     {
-        if(Time.time < 2)
+        if (bNoStart)
         {
             return;
         }
@@ -65,7 +78,7 @@ public class ChaserAIScript : MonoBehaviour
 
     void AIAction()
     {
-        switch(CurrentState)
+        switch (CurrentState)
         {
             case ChaserStates.Roaming:
                 Roam();
@@ -91,20 +104,20 @@ public class ChaserAIScript : MonoBehaviour
     void ChangeState()
     {
         bool CanSeePlayer = SeePlayer();
-        Debug.DrawLine(transform.position, Playerpos.position); 
+        //Debug.DrawLine(transform.position, Playerpos.position);
 
-        if(CanSeePlayer) 
+        if (CanSeePlayer)
         {
             distanceFromPlayer = (transform.position - Playerpos.position).magnitude;
 
-            if(distanceFromPlayer < attackRange && CurrentState == ChaserStates.Chasing)
+            if (distanceFromPlayer < attackRange && CurrentState == ChaserStates.Chasing && agent.speed != 0)
             {
                 EnterAttack();
 
                 return;
             }
 
-            if(CurrentState == ChaserStates.Roaming)
+            if (CurrentState == ChaserStates.Roaming)
             {
                 EnterChase();
 
@@ -114,7 +127,7 @@ public class ChaserAIScript : MonoBehaviour
 
         else
         {
-            if(CurrentState == ChaserStates.Chasing)
+            if (CurrentState == ChaserStates.Chasing)
             {
                 EnterRoam();
 
@@ -127,9 +140,13 @@ public class ChaserAIScript : MonoBehaviour
     {
         CurrentState = ChaserStates.Attacking;
 
+        PlayScream();
+
+        AIAnimator.SetBool("Attacking", true);
+
         Invoke(nameof(ExitAttack), attackCooldown);
 
-        Invoke(nameof(DamagePlayer), 1);
+        Invoke(nameof(DamagePlayer), 2);
     }
 
     void DamagePlayer()
@@ -139,16 +156,18 @@ public class ChaserAIScript : MonoBehaviour
 
     void ExitAttack()
     {
+        AIAnimator.SetBool("Attacking", false);
+
         EnterRoam();
     }
 
     void Roam()
     {
-        if(Time.time - lastTimeSinceChangeDestination > timeBetweenChangeDestination)
+        if (Time.time - lastTimeSinceChangeDestination > timeBetweenChangeDestination)
         {
             lastTimeSinceChangeDestination = Time.time;
 
-            if(bPrevChasingPlayer)
+            if (bPrevChasingPlayer)
             {
                 bPrevChasingPlayer = false;
 
@@ -159,7 +178,7 @@ public class ChaserAIScript : MonoBehaviour
 
             else
             {
-                if(bChasingPlayer)
+                if (bChasingPlayer)
                 {
                     bChasingPlayer = false;
 
@@ -194,13 +213,36 @@ public class ChaserAIScript : MonoBehaviour
 
         if (!bPrevChasingPlayer)
         {
-            SeePlayerSound.Play();
+            PlayScream();
 
             ChaseSound.enabled = true;
             ChaseSound.Play();
         }
 
         bPrevChasingPlayer = true;
+    }
+
+    void PlayScream()
+    {
+        int Num = Random.Range(0, 3);
+
+        if (Num == 0)
+        {
+            SeePlayerSound.Play();
+
+            return;
+        }
+
+        if (Num == 1)
+        {
+            SeePlayerSound1.time = 2;
+
+            SeePlayerSound1.Play();
+
+            return;
+        }
+
+        SeePlayerSound2.Play();
     }
 
     bool SeePlayer()
@@ -211,8 +253,31 @@ public class ChaserAIScript : MonoBehaviour
         if (!Physics.Linecast(transform.position, Playerpos.position, whatIsObject) && direction.magnitude < fovDist && angle < fovAngle)
         {
             return true;
-        }       
+        }
 
         return false;
+    }
+
+    void StartMovement()
+    {
+        bNoStart = false;
+    }
+
+    public void Stun(float StunDuration)
+    {
+        agent.speed = 0;
+
+        PlayScream();
+
+        AIAnimator.SetBool("Stunned", true);
+
+        Invoke(nameof(ExitStun), StunDuration);
+    }
+
+    void ExitStun()
+    {
+        agent.speed = defaultspeed;
+
+        AIAnimator.SetBool("Stunned", false);
     }
 }

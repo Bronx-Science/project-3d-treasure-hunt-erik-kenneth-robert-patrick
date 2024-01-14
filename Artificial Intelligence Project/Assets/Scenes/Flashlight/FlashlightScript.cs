@@ -12,7 +12,6 @@ public class FlashlightScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        goFollow = Camera.main.gameObject;
         vectOffset = transform.position - goFollow.transform.position;
     }
 
