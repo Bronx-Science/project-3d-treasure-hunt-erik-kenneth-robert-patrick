@@ -13,6 +13,7 @@ public class StatComponent : MonoBehaviour
 
     public AudioSource HurtSound;
     public AudioSource DeathSound;
+    public AudioSource WinSound;
 
     public CameraScript CameraScript;
     public Volume PostProcess;
@@ -35,14 +36,14 @@ public class StatComponent : MonoBehaviour
 
     public void Damage(float damage)
     {
-        HurtSound.Play();
-
         Health -= damage;
 
         if(Health < 0)
         {
             EndGame();
         }
+
+        HurtSound.Play();
     }
 
     public void EndGame()
@@ -55,7 +56,7 @@ public class StatComponent : MonoBehaviour
 
         TimeDead = Time.time;
 
-        Invoke(nameof(ShowEndScreen), 4);
+        Invoke(nameof(ShowDeathScreen), 4);
     }
 
     private void FixedUpdate()
@@ -75,9 +76,32 @@ public class StatComponent : MonoBehaviour
         Effect.intensity.value = Mathf.Lerp(0, 1, bruh / 2);
     }
 
-    void ShowEndScreen()
+    void ShowDeathScreen()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "win")
+        {
+            WinGame();
+        }
+    }
+
+    public void WinGame()
+    {
+        WinSound.Play();
+
+        Invoke(nameof(ShowWinScreen), 1);
+    }
+
+    void ShowWinScreen()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

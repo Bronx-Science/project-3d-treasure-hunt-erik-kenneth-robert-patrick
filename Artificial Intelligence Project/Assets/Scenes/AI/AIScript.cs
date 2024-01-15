@@ -39,8 +39,11 @@ public class AIScript : MonoBehaviour
     {
         DeathSound.Play();
 
-        Destroy(gameObject);
+        Invoke(nameof(ShowDeathScreen), 1);
+    }
 
+    void ShowDeathScreen()
+    {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
         Cursor.lockState = CursorLockMode.None;
