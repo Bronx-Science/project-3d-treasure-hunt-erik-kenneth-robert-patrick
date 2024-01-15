@@ -95,7 +95,6 @@ public class CrawlerAIScript : AI
                 break;
 
             case CrawlerStates.Attacking:
-                agent.destination = transform.position;
 
                 break;
         }
@@ -104,7 +103,6 @@ public class CrawlerAIScript : AI
     void ChangeState()
     {
         bool CanSeePlayer = SeePlayer();
-        //Debug.DrawLine(transform.position, Playerpos.position);
 
         if (CanSeePlayer)
         {
@@ -144,19 +142,28 @@ public class CrawlerAIScript : AI
 
         AIAnimator.SetBool("Attacking", true);
 
+        Invoke(nameof(ResetSpeed), 1);
+
         Invoke(nameof(ExitAttack), attackCooldown);
 
-        Invoke(nameof(DamagePlayer), 2);
+        Invoke(nameof(DamagePlayer), 1);
+    }
+    
+    void ResetSpeed()
+    {
+        agent.speed = 0;
     }
 
     void DamagePlayer()
     {
         playerStats.Damage(attackDamage);
+
+        AIAnimator.SetBool("Attacking", false);
     }
 
     void ExitAttack()
     {
-        AIAnimator.SetBool("Attacking", false);
+        agent.speed = defaultspeed;
 
         EnterRoam();
     }

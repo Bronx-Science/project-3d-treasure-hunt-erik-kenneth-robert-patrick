@@ -14,13 +14,15 @@ public class Maze : MonoBehaviour
     public float ChanceOfHigherWall;
 
     public GameObject WallToBeRemoved;
+    private bool bRemovingWall;
 
     // Start is called before the first frame update
     void Start()
     {
+        bRemovingWall = false;
         WallToBeRemoved.SetActive(false);
         Invoke(nameof(SpawnWall), 1.5f);
-        Invoke(nameof(RemoveWall), 5);
+        Invoke(nameof(RemoveWall), 4);
 
         mazeUnits = new MazeUnit[MazeDimensions, MazeDimensions];
 
@@ -63,7 +65,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 3 || j > 3))
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 4 || j > 4))
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
@@ -94,7 +96,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 3 || j > 3))
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 4 || j > 4))
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
@@ -124,7 +126,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 3 || j > 3))
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 4 || j > 4))
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
@@ -154,7 +156,7 @@ public class Maze : MonoBehaviour
 
                 else
                 {
-                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 3 || j > 3))
+                    if (Random.Range(0.0f, 1.0f) > ChanceOfHigherWall && (i > 4 || j > 4))
                     {
                         GameObject Wall = Instantiate(MazeWall);
 
@@ -273,7 +275,22 @@ public class Maze : MonoBehaviour
 
     void RemoveWall()
     {
-        WallToBeRemoved.SetActive(false);
+        bRemovingWall = true;
+
+        Invoke(nameof(StopRemovingWall), 2);
+    }
+
+    void StopRemovingWall()
+    {
+        bRemovingWall = false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (bRemovingWall)
+        {
+            WallToBeRemoved.transform.position = WallToBeRemoved.transform.position - new Vector3(0, 15.0f / 120.0f, 0);
+        }
     }
 }
         

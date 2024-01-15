@@ -54,7 +54,7 @@ public class FlashlightAbility : MonoBehaviour
 
                 Stun();
 
-                //Sound.Play();
+                Sound.Play();
             }
         }
 

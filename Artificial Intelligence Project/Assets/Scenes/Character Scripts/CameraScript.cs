@@ -12,9 +12,13 @@ public class CameraScript : MonoBehaviour
     float xRotation;
     float yRotation;
 
+    public bool bDead;
+
     // Start is called before the first frame update
     void Start()
     {
+        bDead = false;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -22,6 +26,11 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(bDead)
+        {
+            return;
+        }
+
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * Senx;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * Seny;
 

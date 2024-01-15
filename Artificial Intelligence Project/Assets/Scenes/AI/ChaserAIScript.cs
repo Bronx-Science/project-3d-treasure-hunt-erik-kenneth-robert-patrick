@@ -146,7 +146,7 @@ public class ChaserAIScript : AI
 
         Invoke(nameof(ExitAttack), attackCooldown);
 
-        Invoke(nameof(DamagePlayer), 2);
+        Invoke(nameof(DamagePlayer), 1);
     }
 
     void DamagePlayer()
