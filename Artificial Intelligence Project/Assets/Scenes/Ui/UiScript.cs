@@ -21,7 +21,7 @@ public class UiScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        StaminaText.SetText(((int)PlayerCharacterMovement.GetStamina()).ToString());
-        FlashlightAbilityCharges.SetText(((int)PlayerFlashlightAbility.GetCharges()).ToString());
+        StaminaText.SetText("Stamina: " + ((int)PlayerCharacterMovement.GetStamina()).ToString());
+        FlashlightAbilityCharges.SetText("Flashlight Charges: " + ((int)PlayerFlashlightAbility.GetCharges()).ToString());
     }
 }

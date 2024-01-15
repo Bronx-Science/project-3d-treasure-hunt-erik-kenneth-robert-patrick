@@ -60,7 +60,7 @@ public class StatComponent : MonoBehaviour
 
         TimeDead = Time.time;
 
-        Invoke(nameof(ShowDeathScreen), 4);
+        Invoke(nameof(ShowDeathScreen), 3);
     }
 
     private void FixedUpdate()
