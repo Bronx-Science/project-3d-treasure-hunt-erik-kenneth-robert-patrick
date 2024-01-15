@@ -289,7 +289,7 @@ public class Maze : MonoBehaviour
     {
         if (bRemovingWall)
         {
-            WallToBeRemoved.transform.position = WallToBeRemoved.transform.position - new Vector3(0, 15.0f / 120.0f, 0);
+            WallToBeRemoved.transform.position = WallToBeRemoved.transform.position - new Vector3(0, 20f / 120.0f, 0);
         }
     }
 }

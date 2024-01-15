@@ -78,11 +78,46 @@ public class FlashlightAbility : MonoBehaviour
     void Stun()
     {
         Vector3 StartPosition = playerTransform.position;
-        Vector3 StartDirection = playerCamera.transform.forward;
 
+        Vector3 StartDirection = playerCamera.transform.forward;
         RaycastHit[] Hits = Physics.RaycastAll(StartPosition, StartDirection * Reach, Reach);
 
+        Vector3 StartDirection1 = playerCamera.transform.forward + new Vector3(0, 0.3f, 0);
+        RaycastHit[] Hits1 = Physics.RaycastAll(StartPosition, StartDirection1 * Reach, Reach);
+
+        Vector3 StartDirection2 = playerCamera.transform.forward - new Vector3(0, 0.3f, 0);
+        RaycastHit[] Hits2 = Physics.RaycastAll(StartPosition, StartDirection2 * Reach, Reach);
+
+        Vector3 StartDirection3 = playerCamera.transform.forward + Vector3.Cross(playerCamera.transform.forward, playerCamera.transform.up) * 0.3f;
+        RaycastHit[] Hits3 = Physics.RaycastAll(StartPosition, StartDirection3 * Reach, Reach);
+
+        Vector3 StartDirection4 = playerCamera.transform.forward - Vector3.Cross(playerCamera.transform.forward, playerCamera.transform.up) * 0.3f;
+        RaycastHit[] Hits4 = Physics.RaycastAll(StartPosition, StartDirection4 * Reach, Reach);
+
+        List<RaycastHit> HitList = new List<RaycastHit>();
+
         foreach (RaycastHit i in Hits)
+        {
+            HitList.Add(i);
+        }
+        foreach (RaycastHit i in Hits1)
+        {
+            HitList.Add(i);
+        }
+        foreach (RaycastHit i in Hits2)
+        {
+            HitList.Add(i);
+        }
+        foreach (RaycastHit i in Hits3)
+        {
+            HitList.Add(i);
+        }
+        foreach (RaycastHit i in Hits4)
+        {
+            HitList.Add(i);
+        }
+
+        foreach (RaycastHit i in HitList)
         {
             if (i.transform.TryGetComponent<ChaserAIScript>(out ChaserAIScript ChaserClass))
             {
@@ -106,5 +141,10 @@ public class FlashlightAbility : MonoBehaviour
     void ResetAbility()
     {
         CanActivate = true;
+    }
+
+    public int GetCharges()
+    {
+        return Count;
     }
 }

@@ -41,6 +41,8 @@ public class ChaserAIScript : AI
 
     private float defaultspeed;
 
+    private int Num;
+
     enum ChaserStates
     {
         Roaming,
@@ -52,6 +54,8 @@ public class ChaserAIScript : AI
     // Start is called before the first frame update
     void Start()
     {
+        Num = -1;
+
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
         defaultspeed = agent.speed;
@@ -224,7 +228,7 @@ public class ChaserAIScript : AI
 
     void PlayScream()
     {
-        int Num = Random.Range(0, 3);
+        Num++;
 
         if (Num == 0)
         {
@@ -235,13 +239,14 @@ public class ChaserAIScript : AI
 
         if (Num == 1)
         {
-            SeePlayerSound1.time = 2;
-
             SeePlayerSound1.Play();
 
             return;
         }
 
+        Num = -1;
+
+        SeePlayerSound2.time = 1.5f;
         SeePlayerSound2.Play();
     }
 

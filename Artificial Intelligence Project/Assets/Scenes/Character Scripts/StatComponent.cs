@@ -38,8 +38,12 @@ public class StatComponent : MonoBehaviour
     {
         Health -= damage;
 
+        Effect.color.Override(Color.Lerp(Color.red, Color.black, Health / MaxHealth));
+
         if(Health < 0)
         {
+            Effect.color.Override(Color.red);
+
             EndGame();
         }
 
