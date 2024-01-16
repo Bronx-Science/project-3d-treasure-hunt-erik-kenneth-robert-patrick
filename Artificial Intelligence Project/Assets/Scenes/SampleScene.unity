@@ -1857,37 +1857,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1336126525}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &541737311
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 541737312}
-  m_Layer: 0
-  m_Name: Orientation
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &541737312
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 541737311}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 919903917}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &547918846 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8378421186036395175, guid: a6eea3be280cddc4dbd7c13faf3253ba, type: 3}
@@ -2526,7 +2495,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Senx: 1000
   Seny: 1000
-  Orientation: {fileID: 541737312}
+  Orientation: {fileID: 659990266}
   bDead: 0
 --- !u!114 &631786509
 MonoBehaviour:
@@ -2581,8 +2550,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camTransform: {fileID: 631786504}
   shakeDuration: 0
-  shakeAmount: 0.5
+  shakeAmount: 0.25
   decreaseFactor: 1
+--- !u!1 &659990265
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 659990266}
+  m_Layer: 0
+  m_Name: Orientation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &659990266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 659990265}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 919903917}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &662608322 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2986625544379016572, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
@@ -3189,7 +3189,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 631786504}
-  - {fileID: 541737312}
+  - {fileID: 659990266}
   - {fileID: 553650578}
   - {fileID: 40089335}
   m_Father: {fileID: 0}
@@ -3246,7 +3246,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   grounded: 0
-  orientation: {fileID: 541737312}
+  orientation: {fileID: 659990266}
 --- !u!54 &919903919
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3346,7 +3346,7 @@ MonoBehaviour:
   AbilityButton: 323
   Sound: {fileID: 1906059610}
   Count: 4
-  playerTransform: {fileID: 541737312}
+  playerTransform: {fileID: 919903917}
   playerCamera: {fileID: 1878502786}
   Reach: 100
   StunDuration: 7
@@ -3548,14 +3548,14 @@ PrefabInstance:
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: Playerpos
       value: 
-      objectReference: {fileID: 541737312}
+      objectReference: {fileID: 919903917}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: playerStats
       value: 
       objectReference: {fileID: 919903921}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: attackDamage
-      value: 26
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: playerCameraShake
@@ -6448,9 +6448,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1829881314}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.70710677, z: 0.70710677, w: 0}
-  m_LocalPosition: {x: -0.001, y: 0, z: 0.74399996}
-  m_LocalScale: {x: 0.21, y: 100, z: 0.11}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: -0.0009999275, y: 0, z: 0.74400043}
+  m_LocalScale: {x: 0.2099999, y: 100, z: 0.109999985}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 631786504}
@@ -7597,14 +7597,14 @@ PrefabInstance:
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: Playerpos
       value: 
-      objectReference: {fileID: 541737312}
+      objectReference: {fileID: 919903917}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: playerStats
       value: 
       objectReference: {fileID: 919903921}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: attackDamage
-      value: 26
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: playerCameraShake
@@ -7630,7 +7630,7 @@ PrefabInstance:
     - target: {fileID: 3823627105836245221, guid: 395c8aa73ecea2a4ab069c5ceb46440f, type: 3}
       propertyPath: Playerpos
       value: 
-      objectReference: {fileID: 541737312}
+      objectReference: {fileID: 919903917}
     - target: {fileID: 3823627105836245221, guid: 395c8aa73ecea2a4ab069c5ceb46440f, type: 3}
       propertyPath: playerStats
       value: 

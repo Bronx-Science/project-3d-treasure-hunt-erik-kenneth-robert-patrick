@@ -13,7 +13,6 @@ public class StatComponent : MonoBehaviour
 
     public AudioSource HurtSound;
     public AudioSource DeathSound;
-    public AudioSource WinSound;
 
     public CameraScript CameraScript;
     public Volume PostProcess;
@@ -151,13 +150,6 @@ public class StatComponent : MonoBehaviour
     }
 
     public void WinGame()
-    {
-        WinSound.Play();
-
-        Invoke(nameof(ShowWinScreen), 1);
-    }
-
-    void ShowWinScreen()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 2);
 
