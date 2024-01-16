@@ -14,6 +14,7 @@ public class CrawlerAIScript : AI
     public Animator AIAnimator;
     public CameraShake playerCameraShake;
     public StatComponent playerStats;
+    public FlashlightAbility flashlightAbility;
 
     public AudioSource ChaseSound;
     public AudioSource SeePlayerSound;
@@ -296,7 +297,7 @@ public class CrawlerAIScript : AI
     {
         Health -= damage;
 
-        if (Health < 0)
+        if (Health < 0 && !bDead)
         {
             Die();
         }
@@ -304,13 +305,15 @@ public class CrawlerAIScript : AI
 
     void Die()
     {
+        playerStats.AddScore(500);
+
         PlayScream();
 
         agent.speed = 0;
 
         bDead = true;
 
-        Invoke(nameof(DelayDeath), 2);
+        Invoke(nameof(DelayDeath), 1);
     }
 
     void DelayDeath()

@@ -83,6 +83,8 @@ public class CharacterMovement : MonoBehaviour
 
     MovementMode CurrentMovementMode;
 
+    public UiScript UI;
+
     enum MovementMode
     {
         Walking,
@@ -104,6 +106,8 @@ public class CharacterMovement : MonoBehaviour
         Stamina = maxStamina;
 
         EnterWalk();
+
+        UI.ChangeStamina();
     }
     private void FixedUpdate()
     {
@@ -249,11 +253,12 @@ public class CharacterMovement : MonoBehaviour
                 if(Sprinting)
                 {
                     rb.AddForce(moveDirection.normalized * sprintMoveSpeed * 10f, ForceMode.Force);
-
-                    break;
                 }
 
-                rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+                else
+                {
+                    rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+                }
 
                 break;
 
@@ -294,6 +299,8 @@ public class CharacterMovement : MonoBehaviour
             {
                 Stamina = maxStamina;
             }
+
+            UI.ChangeStamina();
         }
     }
 
@@ -305,7 +312,7 @@ public class CharacterMovement : MonoBehaviour
         {
             if (Sprinting)
             {
-                if (flatVel.magnitude > moveSpeed)
+                if (flatVel.magnitude > sprintWallRunMoveSpeed)
                 {
                     Vector3 limitedVel = flatVel.normalized * sprintWallRunMoveSpeed;
                     rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
@@ -327,7 +334,7 @@ public class CharacterMovement : MonoBehaviour
         {
             if(Sprinting)
             {
-                if (flatVel.magnitude > moveSpeed)
+                if (flatVel.magnitude > sprintMoveSpeed)
                 {
                     Vector3 limitedVel = flatVel.normalized * sprintMoveSpeed;
                     rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
@@ -411,8 +418,6 @@ public class CharacterMovement : MonoBehaviour
     {
         rb.useGravity = false;
 
-        //float YVelocity = Mathf.Clamp(rb.velocity.y + wallrunInitialYVelocity, -wallrunInitialYVelocity, wallrunInitialYVelocity);
-
         rb.velocity = new Vector3(rb.velocity.x, wallrunInitialYVelocity, rb.velocity.z);
 
         rb.drag = wallrunDrag;
@@ -484,6 +489,8 @@ public class CharacterMovement : MonoBehaviour
     private void DrainStamina(float DrainAmount)
     {
         Stamina -= DrainAmount;
+
+        UI.ChangeStamina();
 
         staminaLastDrainTime = Time.time;
     }

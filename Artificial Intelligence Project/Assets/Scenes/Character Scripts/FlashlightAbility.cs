@@ -42,6 +42,8 @@ public class FlashlightAbility : MonoBehaviour
 
     public LayerMask WhatIsWall;
 
+    public UiScript UI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -58,6 +60,8 @@ public class FlashlightAbility : MonoBehaviour
         LaserSound.enabled = false;
 
         CharacterMovement = GetComponent<CharacterMovement>();
+
+        UI.ChangeCharges();
     }
 
     // Update is called once per frame
@@ -90,6 +94,8 @@ public class FlashlightAbility : MonoBehaviour
                     Invoke(nameof(ResetAbility), Cooldown);
 
                     Count--;
+
+                    UI.ChangeCharges();
 
                     Active = true;
                     StartTime = Time.time;

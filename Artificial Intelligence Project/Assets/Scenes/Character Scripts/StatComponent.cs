@@ -11,6 +11,10 @@ public class StatComponent : MonoBehaviour
     public float MaxHealth;
     private float Health;
 
+    private float Score;
+
+    public UiScript UI;
+
     public AudioSource HurtSound;
     public AudioSource DeathSound;
 
@@ -108,6 +112,8 @@ public class StatComponent : MonoBehaviour
     {
         if (other.gameObject.tag == "win")
         {
+            PlayerPrefs.SetFloat("Score", Score);
+
             WinGame();
         }
         if (other.gameObject.tag == "pick up")
@@ -115,6 +121,8 @@ public class StatComponent : MonoBehaviour
             LaserBlasterWin.SetActive(false);
             LaserBlasterPerson.SetActive(true);
             Flashlight.HasLaserBlaster = true;
+
+            UI.ChangeScore();
 
             MaxHealth = 500;
             Health = 500;
@@ -155,5 +163,17 @@ public class StatComponent : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    public void AddScore(float score)
+    {
+        Score += score;
+
+        UI.ChangeScore();
+    }
+
+    public float GetScore()
+    {
+        return Score;
     }
 }

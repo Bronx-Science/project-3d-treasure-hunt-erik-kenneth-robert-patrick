@@ -294,7 +294,7 @@ public class ChaserAIScript : AI
     {
         Health -= damage;
 
-        if(Health < 0)
+        if(Health < 0 && !bDead)
         {
             Die();
         }
@@ -304,11 +304,13 @@ public class ChaserAIScript : AI
     {
         PlayScream();
 
+        playerStats.AddScore(1000);
+
         agent.speed = 0;
 
         bDead = true;
 
-        Invoke(nameof(DelayDeath), 2);
+        Invoke(nameof(DelayDeath), 1);
     }
 
     void DelayDeath()
