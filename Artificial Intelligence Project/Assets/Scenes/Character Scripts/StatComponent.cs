@@ -121,7 +121,7 @@ public class StatComponent : MonoBehaviour
             MaxHealth = 500;
             Health = 500;
 
-            Damage(1);
+            Effect.color.Override(Color.Lerp(Color.red, Color.black, Health / MaxHealth));
 
             SpawnAi();
         }

@@ -28,6 +28,7 @@ public class FlashlightAbility : MonoBehaviour
 
     private bool PrevHasLaserBlaster;
     public bool HasLaserBlaster;
+    public AudioSource LaserSound;
 
     public GameObject Laser;
 
@@ -55,6 +56,8 @@ public class FlashlightAbility : MonoBehaviour
         DefaultIntensity = LightSource.intensity;
 
         Beam.enabled = false;
+
+        LaserSound.enabled = false;
 
         CharacterMovement = GetComponent<CharacterMovement>();
     }
@@ -123,17 +126,18 @@ public class FlashlightAbility : MonoBehaviour
         {
             if (Input.GetKey(AbilityButton))
             {
-                //CanActivateLaser = false;
-
                 Beam.enabled = true;
-
-                //Invoke(nameof(ResetBeam), BeamDuration);
-
-                //Invoke(nameof(ResetLaser), LaserCooldown);
 
                 Vector3 StartPosition = Laser.transform.position;
                 Vector3 StartDirection = playerCamera.transform.forward;
                 RaycastHit[] Hits = Physics.RaycastAll(StartPosition, StartDirection * Reach, Reach);
+
+                if (LaserSound.enabled == false)
+                {
+                    LaserSound.enabled = true;
+                    LaserSound.time = 0.3f;
+                    LaserSound.Play();
+                }
 
                 foreach (RaycastHit i in Hits)
                 {
@@ -155,6 +159,8 @@ public class FlashlightAbility : MonoBehaviour
             else
             {
                 Beam.enabled = false;
+
+                LaserSound.enabled = false;
             }
         }
     }
