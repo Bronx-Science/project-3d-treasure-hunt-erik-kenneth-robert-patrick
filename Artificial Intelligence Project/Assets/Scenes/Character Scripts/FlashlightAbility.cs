@@ -26,21 +26,58 @@ public class FlashlightAbility : MonoBehaviour
     private bool Active;
     private float StartTime;
 
+    private bool PrevHasLaserBlaster;
     public bool HasLaserBlaster;
+
+    public GameObject Laser;
+
+    private bool CanActivateLaser;
+    public float LaserCooldown;
+    public float BeamDuration;
+    public LineRenderer Beam;
+
+    private CharacterMovement CharacterMovement;
+    public CameraShake CameraShakeScript;
+
+    public float Damage;
+
+    public LayerMask WhatIsWall;
 
     // Start is called before the first frame update
     void Start()
     {
         CanActivate = true;
 
-        HasLaserBlaster = false;
+        PrevHasLaserBlaster = false;
+
+        CanActivateLaser = true;
 
         DefaultIntensity = LightSource.intensity;
+
+        Beam.enabled = false;
+
+        CharacterMovement = GetComponent<CharacterMovement>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        if (!PrevHasLaserBlaster && HasLaserBlaster)
+        {
+            CharacterMovement.moveSpeed = 10;
+            CharacterMovement.sprintMoveSpeed = 20;
+            CharacterMovement.wallrunMaxSpeed = 10;
+            CharacterMovement.sprintWallRunMoveSpeed = 20;
+            CharacterMovement.slideStaminaCost = 0;
+            CharacterMovement.sprintStaminaCost = 0;
+
+            LightSource.intensity = 100;
+
+            CameraShakeScript.enabled = false;
+        }
+
+        PrevHasLaserBlaster = HasLaserBlaster;
+
         if (!HasLaserBlaster)
         {
             if (CanActivate && Count > 0)
@@ -77,9 +114,59 @@ public class FlashlightAbility : MonoBehaviour
                 {
                     LightSource.intensity = Mathf.Lerp(Intensity, DefaultIntensity, (TimeElapsed - (Duration / 10)) / ((Duration / 10) * 9));
                 }
+            }
 
+            return;
+        }
+
+        if (CanActivateLaser)
+        {
+            if (Input.GetKey(AbilityButton))
+            {
+                //CanActivateLaser = false;
+
+                Beam.enabled = true;
+
+                //Invoke(nameof(ResetBeam), BeamDuration);
+
+                //Invoke(nameof(ResetLaser), LaserCooldown);
+
+                Vector3 StartPosition = Laser.transform.position;
+                Vector3 StartDirection = playerCamera.transform.forward;
+                RaycastHit[] Hits = Physics.RaycastAll(StartPosition, StartDirection * Reach, Reach);
+
+                foreach (RaycastHit i in Hits)
+                {
+                    if (!Physics.Linecast(StartPosition, i.transform.position, WhatIsWall))
+                    {
+                        if (i.transform.TryGetComponent<ChaserAIScript>(out ChaserAIScript ChaserClass))
+                        {
+                            ChaserClass.Damage(Damage / 60);
+                        }
+
+                        if (i.transform.TryGetComponent<CrawlerAIScript>(out CrawlerAIScript CrawlerClass))
+                        {
+                            CrawlerClass.Damage(Damage / 60);
+                        }
+                    }
+                }
+            }
+
+            else
+            {
+                Beam.enabled = false;
             }
         }
+    }
+
+    void ResetBeam()
+    {
+        Beam.enabled = false;
+    }
+
+    void ResetLaser()
+    {
+        CanActivateLaser = true;
     }
 
     void Stun()

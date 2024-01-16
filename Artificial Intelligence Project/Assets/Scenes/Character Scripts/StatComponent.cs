@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering.Universal;
+using static UnityEngine.Rendering.DebugUI;
 
 public class StatComponent : MonoBehaviour
 {
@@ -26,6 +27,16 @@ public class StatComponent : MonoBehaviour
 
     public GameObject LaserBlasterWin;
     public GameObject LaserBlasterPerson;
+
+    public GameObject[] possibleSpawnLocations;
+
+    public GameObject AI;
+    public GameObject AI1;
+    //public GameObject AI2;
+
+    public Transform Playerpos;
+    public CameraShake PlayerCameraShake;
+    public StatComponent PlayerStats;
 
     // Start is called before the first frame update
     void Start()
@@ -106,6 +117,37 @@ public class StatComponent : MonoBehaviour
             LaserBlasterWin.SetActive(false);
             LaserBlasterPerson.SetActive(true);
             Flashlight.HasLaserBlaster = true;
+
+            MaxHealth = 500;
+            Health = 500;
+
+            Damage(1);
+
+            SpawnAi();
+        }
+    }
+
+    void SpawnAi()
+    {
+        for (int i = 0; i < possibleSpawnLocations.Length; i++)
+        {
+            int value = Random.Range(0, 2);
+
+            if(value == 0)
+            {
+                ChaserAIScript Chaser = Instantiate(AI, possibleSpawnLocations[i].transform.position, Quaternion.identity).GetComponent<ChaserAIScript>();
+                Chaser.Playerpos = Playerpos;
+                Chaser.playerCameraShake = PlayerCameraShake;
+                Chaser.playerStats = PlayerStats;
+            }
+
+            else
+            {
+                CrawlerAIScript Crawler = Instantiate(AI1, possibleSpawnLocations[i].transform.position, Quaternion.identity).GetComponent<CrawlerAIScript>();
+                Crawler.Playerpos = Playerpos;
+                Crawler.playerCameraShake = PlayerCameraShake;
+                Crawler.playerStats = PlayerStats;
+            }
         }
     }
 

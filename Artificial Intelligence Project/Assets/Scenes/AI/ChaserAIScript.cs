@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -43,6 +44,10 @@ public class ChaserAIScript : AI
 
     private int Num;
 
+    public float Health;
+
+    private bool bDead;
+
     enum ChaserStates
     {
         Roaming,
@@ -70,7 +75,7 @@ public class ChaserAIScript : AI
     }
     void FixedUpdate()
     {
-        if (bNoStart)
+        if (bNoStart || bDead)
         {
             return;
         }
@@ -284,5 +289,31 @@ public class ChaserAIScript : AI
         agent.speed = defaultspeed;
 
         AIAnimator.SetBool("Stunned", false);
+    }
+
+    public void Damage(float damage)
+    {
+        Health -= damage;
+
+        if(Health < 0)
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        PlayScream();
+
+        agent.speed = 0;
+
+        bDead = true;
+
+        Invoke(nameof(DelayDeath), 2);
+    }
+
+    void DelayDeath()
+    {
+        Destroy(gameObject);
     }
 }
