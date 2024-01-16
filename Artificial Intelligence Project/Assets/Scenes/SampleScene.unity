@@ -3184,7 +3184,7 @@ Transform:
   m_GameObject: {fileID: 919903913}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.63, y: 4.66, z: -64.42}
+  m_LocalPosition: {x: 6.63, y: 4.66, z: -73.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3239,7 +3239,7 @@ MonoBehaviour:
   walkSpeed: 0
   sprintSpeed: 0
   jumpKey: 32
-  crouchKey: 306
+  crouchKey: 301
   sprintKey: 304
   playerHeight: 5
   whatIsGround:
@@ -3345,7 +3345,7 @@ MonoBehaviour:
   Cooldown: 10
   AbilityButton: 323
   Sound: {fileID: 1906059610}
-  Count: 3
+  Count: 4
   playerTransform: {fileID: 541737312}
   playerCamera: {fileID: 1878502786}
   Reach: 100
@@ -3541,6 +3541,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6231968367353904133, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
+      propertyPath: m_Speed
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: Playerpos
       value: 
@@ -3549,6 +3553,10 @@ PrefabInstance:
       propertyPath: playerStats
       value: 
       objectReference: {fileID: 919903921}
+    - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
+      propertyPath: attackDamage
+      value: 26
+      objectReference: {fileID: 0}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: playerCameraShake
       value: 
@@ -6424,6 +6432,7 @@ GameObject:
   - component: {fileID: 1829881319}
   - component: {fileID: 1829881318}
   - component: {fileID: 1829881316}
+  - component: {fileID: 1829881320}
   m_Layer: 0
   m_Name: VHS Effect
   m_TagString: Untagged
@@ -6464,7 +6473,7 @@ VideoPlayer:
   m_TargetMaterialProperty: 
   m_RenderMode: 3
   m_AspectRatio: 2
-  m_DataSource: 0
+  m_DataSource: 1
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
@@ -6472,14 +6481,14 @@ VideoPlayer:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 0
-  m_Url: 
+  m_Url: VHS.mp4
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 01
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 1
   m_Looping: 1
-  m_WaitForFirstFrame: 1
+  m_WaitForFirstFrame: 0
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
 --- !u!23 &1829881318
@@ -6532,6 +6541,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1829881314}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1829881320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829881314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8682c72bf0a9b6e4aaf6f4639c9105aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  videoPlayer: {fileID: 1829881316}
+  videoFileName: VHS.mp4
 --- !u!4 &1870846218 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3585911198615817830, guid: b125b75f2cd28284a841002099c7daa6, type: 3}
@@ -6699,7 +6722,7 @@ Transform:
   m_GameObject: {fileID: 1878502782}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.63, y: 5.31, z: -64.429}
+  m_LocalPosition: {x: 6.63, y: 5.31, z: -73.589005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7567,6 +7590,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6231968367353904133, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
+      propertyPath: m_Speed
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: Playerpos
       value: 
@@ -7575,6 +7602,10 @@ PrefabInstance:
       propertyPath: playerStats
       value: 
       objectReference: {fileID: 919903921}
+    - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
+      propertyPath: attackDamage
+      value: 26
+      objectReference: {fileID: 0}
     - target: {fileID: 8076180563746168892, guid: a8d6a7b5554c39147a1114aa6f0c3f9a, type: 3}
       propertyPath: playerCameraShake
       value: 
@@ -7608,6 +7639,10 @@ PrefabInstance:
       propertyPath: playerCameraShake
       value: 
       objectReference: {fileID: 631786510}
+    - target: {fileID: 6837658137075589995, guid: 395c8aa73ecea2a4ab069c5ceb46440f, type: 3}
+      propertyPath: m_Speed
+      value: 6.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7757053866305366996, guid: 395c8aa73ecea2a4ab069c5ceb46440f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.86
