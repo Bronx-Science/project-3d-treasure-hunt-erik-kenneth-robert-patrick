@@ -257,7 +257,7 @@ public class CrawlerAIScript : AI
         Vector3 direction = Playerpos.position - transform.position;
         float angle = Vector3.Angle(direction, transform.forward);
 
-        if (!Physics.Linecast(transform.position, Playerpos.position, whatIsObject) && direction.magnitude < fovDist && angle < fovAngle)
+        if (!Physics.Linecast(transform.position + new Vector3(0,3,0), Playerpos.position, whatIsObject) && direction.magnitude < fovDist && angle < fovAngle)
         {
             return true;
         }

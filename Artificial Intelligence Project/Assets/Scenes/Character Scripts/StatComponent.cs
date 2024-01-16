@@ -22,6 +22,11 @@ public class StatComponent : MonoBehaviour
     private bool bDead;
     private float TimeDead;
 
+    public FlashlightAbility Flashlight;
+
+    public GameObject LaserBlasterWin;
+    public GameObject LaserBlasterPerson;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +37,8 @@ public class StatComponent : MonoBehaviour
         PostProcess.profile.TryGet<Vignette>(out Vignette VIGNETTE);
 
         Effect = VIGNETTE;
+
+        Flashlight = GetComponent<FlashlightAbility>();
     }
 
     public void Damage(float damage)
@@ -93,6 +100,12 @@ public class StatComponent : MonoBehaviour
         if (other.gameObject.tag == "win")
         {
             WinGame();
+        }
+        if (other.gameObject.tag == "pick up")
+        {
+            LaserBlasterWin.SetActive(false);
+            LaserBlasterPerson.SetActive(true);
+            Flashlight.HasLaserBlaster = true;
         }
     }
 

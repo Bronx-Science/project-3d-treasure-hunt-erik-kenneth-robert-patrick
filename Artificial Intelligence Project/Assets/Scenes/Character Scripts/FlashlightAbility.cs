@@ -26,10 +26,14 @@ public class FlashlightAbility : MonoBehaviour
     private bool Active;
     private float StartTime;
 
+    public bool HasLaserBlaster;
+
     // Start is called before the first frame update
     void Start()
     {
         CanActivate = true;
+
+        HasLaserBlaster = false;
 
         DefaultIntensity = LightSource.intensity;
     }
@@ -37,41 +41,44 @@ public class FlashlightAbility : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (CanActivate && Count > 0)
+        if (!HasLaserBlaster)
         {
-            if (Input.GetKey(AbilityButton))
+            if (CanActivate && Count > 0)
             {
-                CanActivate = false;
+                if (Input.GetKey(AbilityButton))
+                {
+                    CanActivate = false;
 
-                Invoke(nameof(ResetAbility), Cooldown);
+                    Invoke(nameof(ResetAbility), Cooldown);
 
-                Count--;
+                    Count--;
 
-                Active = true;
-                StartTime = Time.time;
+                    Active = true;
+                    StartTime = Time.time;
 
-                Invoke(nameof(EndAbility), Duration);
+                    Invoke(nameof(EndAbility), Duration);
 
-                Stun();
+                    Stun();
 
-                Sound.Play();
-            }
-        }
-
-        if(Active)
-        {
-            float TimeElapsed = Time.time - StartTime;
-
-            if(TimeElapsed < Duration / 10)
-            {
-                LightSource.intensity = Mathf.Lerp(DefaultIntensity, Intensity, TimeElapsed / (Duration / 10));
+                    Sound.Play();
+                }
             }
 
-            else
+            if (Active)
             {
-                LightSource.intensity = Mathf.Lerp(Intensity, DefaultIntensity, (TimeElapsed - (Duration / 10)) / ((Duration / 10) * 9));
+                float TimeElapsed = Time.time - StartTime;
+
+                if (TimeElapsed < Duration / 10)
+                {
+                    LightSource.intensity = Mathf.Lerp(DefaultIntensity, Intensity, TimeElapsed / (Duration / 10));
+                }
+
+                else
+                {
+                    LightSource.intensity = Mathf.Lerp(Intensity, DefaultIntensity, (TimeElapsed - (Duration / 10)) / ((Duration / 10) * 9));
+                }
+
             }
-                
         }
     }
 
