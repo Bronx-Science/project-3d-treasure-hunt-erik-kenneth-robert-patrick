@@ -9,15 +9,15 @@ public class UiScript : MonoBehaviour
     public TMP_Text StaminaText;
     public TMP_Text FlashlightAbilityCharges;
     public GameObject Player;
-    private CharacterMovement PlayerCharacterMovement;
-    private FlashlightAbility PlayerFlashlightAbility;
-    private StatComponent PlayerStats;
+    public CharacterMovement PlayerCharacterMovement;
+    public FlashlightAbility PlayerFlashlightAbility;
+    public StatComponent PlayerStats;
     // Start is called before the first frame update
     void Start()
     {
-        PlayerCharacterMovement = Player.GetComponent<CharacterMovement>();
-        PlayerFlashlightAbility = Player.GetComponent<FlashlightAbility>();
-        PlayerStats = Player.GetComponent<StatComponent>();
+        //PlayerCharacterMovement = Player.GetComponent<CharacterMovement>();
+        //PlayerFlashlightAbility = Player.GetComponent<FlashlightAbility>();
+        //PlayerStats = Player.GetComponent<StatComponent>();
 
         ChangeStamina();
         ChangeCharges();
@@ -30,7 +30,7 @@ public class UiScript : MonoBehaviour
 
     public void ChangeCharges()
     {
-        FlashlightAbilityCharges.SetText("Flashlight Charges: " + ((int)PlayerFlashlightAbility.GetCharges()).ToString());
+        FlashlightAbilityCharges.SetText("Flashlight Charges: " + PlayerFlashlightAbility.GetCharges().ToString());
     }
 
     public void ChangeScore()

@@ -4344,6 +4344,9 @@ MonoBehaviour:
   StaminaText: {fileID: 1676494776}
   FlashlightAbilityCharges: {fileID: 60468391}
   Player: {fileID: 919903913}
+  PlayerCharacterMovement: {fileID: 919903918}
+  PlayerFlashlightAbility: {fileID: 919903922}
+  PlayerStats: {fileID: 919903921}
 --- !u!1 &1110141175
 GameObject:
   m_ObjectHideFlags: 0
