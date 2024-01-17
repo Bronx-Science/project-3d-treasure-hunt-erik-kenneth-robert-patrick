@@ -2555,8 +2555,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 498b27992cd4d9240b8fb9fe9cb5f258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Senx: 1000
-  Seny: 1000
+  Senx: 750
+  Seny: 750
   Orientation: {fileID: 659990266}
   bDead: 0
 --- !u!114 &631786509
@@ -2612,7 +2612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camTransform: {fileID: 631786504}
   shakeDuration: 0
-  shakeAmount: 0.25
+  shakeAmount: 0.34
   decreaseFactor: 1
 --- !u!1 &659990265
 GameObject:

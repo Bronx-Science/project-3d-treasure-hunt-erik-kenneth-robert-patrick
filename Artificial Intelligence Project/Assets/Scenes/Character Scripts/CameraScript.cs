@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public float Senx;
-    public float Seny;
+    public float Sens;
 
     public Transform Orientation;
 
@@ -31,8 +30,8 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
-        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * Senx;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * Seny;
+        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * Sens;
+        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * Sens;
 
         yRotation += mouseX;
         xRotation -= mouseY;
