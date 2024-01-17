@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraScript : MonoBehaviour
 {
+    public Slider slider;
+
     public float Sens;
 
     public Transform Orientation;
@@ -18,6 +21,9 @@ public class CameraScript : MonoBehaviour
     {
         bDead = false;
 
+        Sens = PlayerPrefs.GetFloat("currentSens", 100);
+        slider.value = Sens / 100;
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -30,6 +36,7 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
+        PlayerPrefs.SetFloat("currentSens", Sens);
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * Sens;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * Sens;
 
@@ -40,5 +47,10 @@ public class CameraScript : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         Orientation.rotation = Quaternion.Euler(0, yRotation, 0);
+    }
+
+    public void AdjustSpeed(float newSpeed)
+    {
+        Sens = newSpeed * 10;
     }
 }
