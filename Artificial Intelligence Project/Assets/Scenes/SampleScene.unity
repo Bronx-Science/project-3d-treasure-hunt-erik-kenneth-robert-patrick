@@ -2555,7 +2555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 498b27992cd4d9240b8fb9fe9cb5f258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Sens: 750
+  Sens: 333
   Orientation: {fileID: 659990266}
   bDead: 0
 --- !u!114 &631786509

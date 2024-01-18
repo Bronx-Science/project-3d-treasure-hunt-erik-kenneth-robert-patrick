@@ -39,7 +39,7 @@ public class AIScript : MonoBehaviour
     {
         DeathSound.Play();
 
-        Invoke(nameof(ShowDeathScreen), 1);
+        Invoke(nameof(ShowDeathScreen), 0.5f);
     }
 
     void ShowDeathScreen()
